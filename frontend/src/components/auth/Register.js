@@ -59,7 +59,7 @@ const Register = () => {
                   <label className="form-label">Email</label>
                   <input
                     type="email"
-                    className="form-control form-narrow form-narrow-centered"
+                    className="border border-gray-300 rounded-md px-3 py-2 w-[270px] mx-auto block"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
@@ -71,7 +71,7 @@ const Register = () => {
                   <label className="form-label">Username</label>
                   <input
                     type="text"
-                    className="form-control form-narrow form-narrow-centered"
+                    className="border border-gray-300 rounded-md px-3 py-2 w-[270px] mx-auto block"
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
@@ -83,7 +83,7 @@ const Register = () => {
                   <label className="form-label">Password</label>
                   <input
                     type="password"
-                    className="form-control form-narrow form-narrow-centered"
+                    className="border border-gray-300 rounded-md px-3 py-2 w-[270px] mx-auto block"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
@@ -91,8 +91,8 @@ const Register = () => {
                   />
                 </div>
 
-                <div className="text-end mt-2">
-                  <button type="submit" className="btn btn-primary" disabled={loading}>
+                <div className="flex justify-end mt-2">
+                  <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded" disabled={loading}>
                     {loading ? 'Registering...' : 'Register'}
                   </button>
                 </div>

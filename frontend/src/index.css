@@ -1,0 +1,5 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* You can add global customizations here using Tailwind's @apply if needed */

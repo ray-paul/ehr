@@ -1,21 +1,22 @@
 
-/* Utility to control narrow form fields and alignment (pixel-based) */
-/*
-	 Previous max was 360px; user requested 0.75 of current size -> 360 * 0.75 = 270px.
-	 Use exact pixel width with a smaller min to remain usable on small screens.
-*/
-.form-narrow {
-	width: 270px; /* exact pixel width */
-	max-width: 270px; /* fixed cap */
-	min-width: 135px; /* 0.75 of previous min (180 * 0.75 = 135) */
+/* App wide styles kept minimal — Tailwind used for layout and components */
+
+/* Float-card animation: start slightly translated and faded, then float up when in view */
+.float-card {
+	transform: translateY(20px);
+	opacity: 0;
+	transition: transform 600ms cubic-bezier(.22,.9,.3,1), opacity 600ms ease;
 }
 
-.form-narrow-centered {
-	margin-left: auto;
-	margin-right: auto;
+.float-card.in-view {
+	transform: translateY(0);
+	opacity: 1;
 }
 
-.form-narrow-left {
-	margin-left: 0;
+/* gentle hover lift */
+.float-card:hover {
+	transform: translateY(-6px);
+	box-shadow: 0 10px 20px rgba(0,0,0,0.06);
 }
+
 
