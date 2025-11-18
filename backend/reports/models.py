@@ -5,6 +5,8 @@ from django.conf import settings
 class Report(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True)
+    # Associate report with a Patient (nullable to ease migrations)
+    patient = models.ForeignKey('patients.Patient', on_delete=models.CASCADE, null=True, blank=True, related_name='reports')
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

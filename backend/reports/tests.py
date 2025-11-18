@@ -3,6 +3,7 @@ from rest_framework.test import APIClient
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from .models import Report
+from patients.models import Patient
 
 
 User = get_user_model()
@@ -13,11 +14,13 @@ class ReportsAPITest(TestCase):
         self.client = APIClient()
         self.doctor = User.objects.create_user(username='doc', password='pass', user_type='doctor')
         self.patient = User.objects.create_user(username='pat', password='pass', user_type='patient')
+        # create Patient record for patient user
+        self.patient_record = Patient.objects.create(user=self.patient, date_of_birth='1990-01-01', gender='M')
 
     def test_provider_full_crud(self):
         self.client.force_authenticate(self.doctor)
-        # create
-        resp = self.client.post('/api/reports/', {'title': 'R1', 'content': 'C1'}, format='json')
+        # create (associate with patient)
+        resp = self.client.post('/api/reports/', {'title': 'R1', 'content': 'C1', 'patient': self.patient_record.id}, format='json')
         self.assertEqual(resp.status_code, 201)
         report_id = resp.data['id']
         # update
@@ -29,7 +32,7 @@ class ReportsAPITest(TestCase):
 
     def test_patient_cannot_create_but_can_read_empty(self):
         self.client.force_authenticate(self.patient)
-        resp = self.client.post('/api/reports/', {'title': 'PatientReport', 'content': 'Should fail'}, format='json')
+        resp = self.client.post('/api/reports/', {'title': 'PatientReport', 'content': 'Should fail', 'patient': self.patient_record.id}, format='json')
         # patient should not be allowed to create
         self.assertIn(resp.status_code, (401, 403))
         # reading list should be allowed (may be empty)

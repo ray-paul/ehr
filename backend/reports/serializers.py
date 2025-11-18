@@ -4,6 +4,7 @@ from .models import Report
 
 class ReportSerializer(serializers.ModelSerializer):
     created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
+    patient_name = serializers.CharField(source='patient.user.get_full_name', read_only=True)
 
     class Meta:
         model = Report

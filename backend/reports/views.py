@@ -12,17 +12,27 @@ class ReportViewSet(viewsets.ModelViewSet):
     - Safe methods: providers can read any; others can read (object-level) their own.
     - Unsafe methods (create/update/delete): only providers (doctors/nurses) may perform these.
     """
-    queryset = Report.objects.all().order_by('-created_at')
     serializer_class = ReportSerializer
 
+    def get_queryset(self):
+        qs = Report.objects.all().order_by('-created_at')
+        patient_id = self.request.query_params.get('patient')
+        user = getattr(self.request, 'user', None)
+        # Providers can optionally filter by patient or view all
+        if getattr(user, 'user_type', None) in ('doctor', 'nurse'):
+            if patient_id:
+                return qs.filter(patient_id=patient_id)
+            return qs
+        # Non-providers (patients) only see reports for their patient record
+        if user and user.is_authenticated:
+            return qs.filter(patient__user=user)
+        return qs.none()
+
     def get_permissions(self):
-        # For safe methods, allow read-only behavior with object-level checks
         if self.request.method in SAFE_METHODS:
             return [IsOwnerOrProviderOrReadOnly()]
-        # For unsafe methods, require provider role
         return [IsDoctorOrNurse()]
 
     def perform_create(self, serializer):
-        # Set the creator automatically
         serializer.save(created_by=self.request.user)
 
