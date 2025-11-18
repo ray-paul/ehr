@@ -45,33 +45,35 @@ const Login = () => {
                   <label className="form-label">Username</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control form-narrow form-narrow-centered"
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
                     required
                   />
                 </div>
-                
+
                 <div className="mb-3">
                   <label className="form-label">Password</label>
                   <input
                     type="password"
-                    className="form-control"
+                    className="form-control form-narrow form-narrow-centered"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
                     required
                   />
                 </div>
-                
-                <button 
-                  type="submit" 
-                  className="btn btn-primary w-100"
-                  disabled={loading}
-                >
-                  {loading ? 'Logging in...' : 'Login'}
-                </button>
+
+                <div className="text-end mt-2">
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={loading}
+                  >
+                    {loading ? 'Logging in...' : 'Login'}
+                  </button>
+                </div>
               </form>
               
               <div className="text-center mt-3">

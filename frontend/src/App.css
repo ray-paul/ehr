@@ -1,8 +1,13 @@
-/* Utility to control narrow form fields and alignment */
+
+/* Utility to control narrow form fields and alignment (pixel-based) */
+/*
+	 Previous max was 360px; user requested 0.75 of current size -> 360 * 0.75 = 270px.
+	 Use exact pixel width with a smaller min to remain usable on small screens.
+*/
 .form-narrow {
-	width: 60%; /* precise width relative to container; adjust as needed */
-	max-width: 360px; /* cap the width on large screens */
-	min-width: 180px; /* ensure usability on very small screens */
+	width: 270px; /* exact pixel width */
+	max-width: 270px; /* fixed cap */
+	min-width: 135px; /* 0.75 of previous min (180 * 0.75 = 135) */
 }
 
 .form-narrow-centered {

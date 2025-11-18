@@ -1,6 +1,6 @@
 # backend/patients/models.py
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class Patient(models.Model):
     GENDER_CHOICES = (
@@ -9,7 +9,7 @@ class Patient(models.Model):
         ('O', 'Other'),
     )
     
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     phone = models.CharField(max_length=15, blank=True)
@@ -23,7 +23,7 @@ class Patient(models.Model):
 
 class ClinicalNote(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    provider = models.ForeignKey(User, on_delete=models.CASCADE)
+    provider = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     subjective = models.TextField(help_text="Patient's symptoms and history")
     objective = models.TextField(help_text="Objective findings, vitals, etc.")
     assessment = models.TextField(help_text="Assessment and diagnosis")

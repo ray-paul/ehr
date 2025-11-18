@@ -59,7 +59,7 @@ const Register = () => {
                   <label className="form-label">Email</label>
                   <input
                     type="email"
-                    className="form-control form-narrow form-narrow-left"
+                    className="form-control form-narrow form-narrow-centered"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
@@ -71,7 +71,7 @@ const Register = () => {
                   <label className="form-label">Username</label>
                   <input
                     type="text"
-                    className="form-control form-narrow form-narrow-left"
+                    className="form-control form-narrow form-narrow-centered"
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
@@ -83,7 +83,7 @@ const Register = () => {
                   <label className="form-label">Password</label>
                   <input
                     type="password"
-                    className="form-control form-narrow form-narrow-left"
+                    className="form-control form-narrow form-narrow-centered"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
@@ -91,7 +91,7 @@ const Register = () => {
                   />
                 </div>
 
-                <div className="text-start mt-2">
+                <div className="text-end mt-2">
                   <button type="submit" className="btn btn-primary" disabled={loading}>
                     {loading ? 'Registering...' : 'Register'}
                   </button>
