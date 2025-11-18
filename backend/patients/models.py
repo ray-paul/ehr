@@ -52,3 +52,16 @@ class Medication(models.Model):
     frequency = models.CharField(max_length=50)
     prescribed_date = models.DateField()
     active = models.BooleanField(default=True)  
+
+
+class Appointment(models.Model):
+    title = models.CharField(max_length=200, blank=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments')
+    scheduled = models.DateTimeField(null=True, blank=True)
+    notes = models.TextField(blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.title or 'Appointment'} for {self.patient} at {self.scheduled}"

@@ -4,6 +4,8 @@ from rest_framework.exceptions import PermissionDenied
 from .models import Patient, ClinicalNote
 from .serializers import PatientSerializer, ClinicalNoteSerializer
 from .permissions import IsDoctorOrNurse, IsOwnerOrProviderOrReadOnly
+from .serializers import AppointmentSerializer
+from .models import Appointment
 
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
@@ -47,6 +49,26 @@ class ClinicalNoteViewSet(viewsets.ModelViewSet):
         if getattr(self.request.user, 'user_type', None) not in ('doctor', 'nurse'):
             raise PermissionDenied('Only providers may create clinical notes')
         serializer.save(provider=self.request.user)
+
+
+class AppointmentViewSet(viewsets.ModelViewSet):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrProviderOrReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user
+        role = getattr(user, 'user_type', None)
+        if role in ('doctor', 'nurse'):
+            return Appointment.objects.all()
+        if role == 'patient':
+            return Appointment.objects.filter(patient__user=user)
+        return Appointment.objects.none()
+
+    def perform_create(self, serializer):
+        if getattr(self.request.user, 'user_type', None) not in ('doctor', 'nurse'):
+            raise PermissionDenied('Only providers may create appointments')
+        serializer.save(created_by=self.request.user)
 
 class PatientDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Patient.objects.all()
