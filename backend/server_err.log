@@ -151,7 +151,8 @@ C:\Users\Paul\hacksmith\ehr\backend\reports\models.py changed, reloading.
 Watching for file changes with StatReloader
 C:\Users\Paul\hacksmith\ehr\backend\reports\views.py changed, reloading.
 Watching for file changes with StatReloader
-3.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 1043, in _bootstrap_inner
+[19/Nov/2025 00:44:37] "POST /api/auth/login/ HTTP/1.1" 200 196
+tstrap_inner
     self.run()
     ~~~~~~~~^^
   File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 994, in run
@@ -275,3 +276,9 @@ Not Found: /main.badd5a85e5def12a928f.hot-update.json
 [19/Nov/2025 00:30:51] "OPTIONS /api/patients/patients/ HTTP/1.1" 200 0
 [19/Nov/2025 00:30:52] "GET /api/patients/patients/ HTTP/1.1" 200 2
 [19/Nov/2025 00:30:52] "GET /api/patients/patients/ HTTP/1.1" 200 2
+C:\Users\Paul\hacksmith\ehr\backend\reports\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Paul\hacksmith\ehr\backend\reports\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Paul\hacksmith\ehr\backend\reports\views.py changed, reloading.
+Watching for file changes with StatReloader
