@@ -1,23 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { appointmentsService } from '../services/appointments';
-
-// add intersection observer to animate float-cards when in viewport
-const useFloatOnView = () => {
-  useEffect(() => {
-    const els = Array.from(document.querySelectorAll('.float-card'));
-    if (!els.length) return;
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-        }
-      });
-    }, { threshold: 0.2 });
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
-};
+import useFloatOnView from '../hooks/useFloatOnView';
 
 const AppointmentCard = ({ appt }) => {
   return (

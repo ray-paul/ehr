@@ -1,8 +1,10 @@
 // frontend/src/pages/Dashboard.js
 import React from 'react';
+import useFloatOnView from '../hooks/useFloatOnView';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
+  useFloatOnView();
   return (
     <div>
       <h1>Dashboard</h1>
@@ -34,16 +36,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <script>
-        {`(function() {
-          const els = document.querySelectorAll('.float-card');
-          if (!els.length) return;
-          const obs = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
-          }, { threshold: 0.2 });
-          els.forEach(el => obs.observe(el));
-        })();`}
-      </script>
+      
     </div>
   );
 };
