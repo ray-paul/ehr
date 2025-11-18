@@ -61,70 +61,17 @@ C:\Users\Paul\hacksmith\ehr\backend\patients\appointments_urls.py changed, reloa
 Watching for file changes with StatReloader
 C:\Users\Paul\hacksmith\ehr\backend\patients\appointments_urls.py changed, reloading.
 Watching for file changes with StatReloader
-ages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\db\models\query.py", line 91, in __iter__
-    results = compiler.execute_sql(
-        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
-    )
-  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
-    cursor.execute(sql, params)
-    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\db\backends\utils.py", line 102, in execute
-    return super().execute(sql, params)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\db\backends\utils.py", line 67, in execute
-    return self._execute_with_wrappers(
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-        sql, params, many=False, executor=self._execute
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
-    return executor(sql, params, many, context)
-  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\db\backends\utils.py", line 84, in _execute
-    with self.db.wrap_database_errors:
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\db\utils.py", line 91, in __exit__
-    raise dj_exc_value.with_traceback(traceback) from exc_value
-  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\db\backends\utils.py", line 89, in _execute
-    return self.cursor.execute(sql, params)
-           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
-    return super().execute(query, params)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
-django.db.utils.OperationalError: no such table: patients_patient
-[18/Nov/2025 21:52:56] "GET /api/patients/patients/ HTTP/1.1" 500 173312
-[18/Nov/2025 21:52:56,187] - Broken pipe from ('127.0.0.1', 59293)
-[18/Nov/2025 21:54:35] "POST /api/auth/register/ HTTP/1.1" 200 203
-[18/Nov/2025 21:55:15] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:06:17] "OPTIONS /api/auth/register/ HTTP/1.1" 200 0
-[18/Nov/2025 22:06:21] "POST /api/auth/register/ HTTP/1.1" 200 196
-[18/Nov/2025 22:06:34] "OPTIONS /api/patients/patients/ HTTP/1.1" 200 0
-[18/Nov/2025 22:06:34] "OPTIONS /api/patients/patients/ HTTP/1.1" 200 0
-[18/Nov/2025 22:06:34] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:06:34] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:11:38] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:11:38] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:12:14] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:12:14] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:15:06] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:15:06] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:34:51] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:34:51] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:34:53] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:34:53] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:34:55] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[18/Nov/2025 22:34:55] "GET /api/patients/patients/ HTTP/1.1" 200 2
-C:\Users\Paul\hacksmith\ehr\backend\patients\views.py changed, reloading.
-Watching for file changes with StatReloader
-C:\Users\Paul\hacksmith\ehr\backend\patients\models.py changed, reloading.
-Watching for file changes with StatReloader
-C:\Users\Paul\hacksmith\ehr\backend\patients\serializers.py changed, reloading.
-Watching for file changes with StatReloader
-C:\Users\Paul\hacksmith\ehr\backend\patients\views.py changed, reloading.
-Watching for file changes with StatReloader
-C:\Users\Paul\hacksmith\ehr\backend\patients\views.py changed, reloading.
+C:\Users\Paul\hacksmith\ehr\backend\ehr_project\urls.py changed, reloading.
 Watching for file changes with StatReloader
 C:\Users\Paul\hacksmith\ehr\backend\ehr_project\urls.py changed, reloading.
+Watching for file changes with StatReloader
+[18/Nov/2025 23:55:58] "GET /api/reports/ HTTP/1.1" 200 115
+[19/Nov/2025 00:18:07] "POST /api/auth/login/ HTTP/1.1" 200 196
+C:\Users\Paul\hacksmith\ehr\backend\ehr_project\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Paul\hacksmith\ehr\backend\reports\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Paul\hacksmith\ehr\backend\reports\views.py changed, reloading.
 Watching for file changes with StatReloader
 Exception in thread django-main-thread:
 Traceback (most recent call last):
@@ -140,13 +87,65 @@ Traceback (most recent call last):
   File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\management\commands\runserver.py", line 133, in inner_run
     self.check(display_num_errors=True)
     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\management\base.py", line 556, in check
-    raise SystemCheckError(msg)
-django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
-
-ERRORS:
-?: (urls.E004) Your URL pattern ([<URLPattern '^$' [name='appointments-list']>, <URLPattern '^\.(?P<format>[a-z0-9]+)/?$' [name='appointments-list']>, <URLPattern '^(?P<pk>[^/.]+)/$' [name='appointments-detail']>, <URLPattern '^(?P<pk>[^/.]+)\.(?P<format>[a-z0-9]+)/?$' [name='appointments-detail']>, <URLPattern '^$' [name='api-root']>, <URLPattern '^\.(?P<format>[a-z0-9]+)/?$' [name='api-root']>], None, None) is invalid. Ensure that urlpatterns is a list of path() and/or re_path() instances.
-	HINT: Try using path() instead of a tuple.
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\management\base.py", line 485, in check
+    all_issues = checks.run_checks(
+        app_configs=app_configs,
+    ...<2 lines>...
+        databases=databases,
+    )
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\checks\registry.py", line 88, in run_checks
+    new_errors = check(app_configs=app_configs, databases=databases)
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\checks\urls.py", line 14, in check_url_config
+    return check_resolver(resolver)
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\checks\urls.py", line 24, in check_resolver
+    return check_method()
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\urls\resolvers.py", line 494, in check
+    for pattern in self.url_patterns:
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\urls\resolvers.py", line 715, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\urls\resolvers.py", line 708, in urlconf_module
+    return import_module(self.urlconf_name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1027, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Paul\hacksmith\ehr\backend\ehr_project\urls.py", line 9, in <module>
+    path('api/reports/', include('reports.urls')),
+                         ~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\urls\conf.py", line 38, in include
+    urlconf_module = import_module(urlconf_module)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1027, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Paul\hacksmith\ehr\backend\reports\urls.py", line 2, in <module>
+    from .views import ReportsList
+ImportError: cannot import name 'ReportsList' from 'reports.views' (C:\Users\Paul\hacksmith\ehr\backend\reports\views.py)
+C:\Users\Paul\hacksmith\ehr\backend\reports\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Paul\hacksmith\ehr\backend\reports\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Paul\hacksmith\ehr\backend\reports\views.py changed, reloading.
+Watching for file changes with StatReloader
+using path() instead of a tuple.
 
 System check identified 1 issue (0 silenced).
 C:\Users\Paul\hacksmith\ehr\backend\ehr_project\urls.py changed, reloading.
@@ -177,4 +176,19 @@ System check identified 1 issue (0 silenced).
 C:\Users\Paul\hacksmith\ehr\backend\patients\appointments_urls.py changed, reloading.
 Watching for file changes with StatReloader
 C:\Users\Paul\hacksmith\ehr\backend\patients\appointments_urls.py changed, reloading.
+Watching for file changes with StatReloader
+[18/Nov/2025 23:46:56] "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+[18/Nov/2025 23:46:58] "POST /api/auth/login/ HTTP/1.1" 200 196
+[18/Nov/2025 23:48:07] "OPTIONS /api/appointments/ HTTP/1.1" 200 0
+[18/Nov/2025 23:48:07] "OPTIONS /api/appointments/ HTTP/1.1" 200 0
+[18/Nov/2025 23:48:07] "GET /api/appointments/ HTTP/1.1" 200 2
+[18/Nov/2025 23:48:07] "GET /api/appointments/ HTTP/1.1" 200 2
+[18/Nov/2025 23:48:15] "GET /api/patients/patients/ HTTP/1.1" 200 2
+[18/Nov/2025 23:48:15] "GET /api/patients/patients/ HTTP/1.1" 200 2
+Bad Request: /api/auth/register/
+[18/Nov/2025 23:49:06] "POST /api/auth/register/ HTTP/1.1" 400 58
+[18/Nov/2025 23:49:22] "POST /api/auth/register/ HTTP/1.1" 200 197
+C:\Users\Paul\hacksmith\ehr\backend\ehr_project\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Paul\hacksmith\ehr\backend\ehr_project\urls.py changed, reloading.
 Watching for file changes with StatReloader

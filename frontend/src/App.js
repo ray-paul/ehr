@@ -1,4 +1,3 @@
-// frontend/src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -32,7 +31,6 @@ function App() {
         }>
           <Route index element={<Dashboard />} />
           <Route path="patients" element={<PatientList />} />
-          {/* Example: restrict patient creation to doctors and admins */}
           <Route
             path="patients/new"
             element={

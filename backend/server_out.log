@@ -50,13 +50,13 @@ Django version 4.2.7, using settings 'ehr_project.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CTRL-BREAK.
 
-t server at http://127.0.0.1:8000/
-Quit the server with CTRL-BREAK.
-
 Performing system checks...
 
 System check identified no issues (0 silenced).
-November 18, 2025 - 23:18:48
+
+You have 1 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): patients.
+Run 'python manage.py migrate' to apply them.
+November 18, 2025 - 23:20:53
 Django version 4.2.7, using settings 'ehr_project.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CTRL-BREAK.
@@ -64,7 +64,7 @@ Quit the server with CTRL-BREAK.
 Performing system checks...
 
 System check identified no issues (0 silenced).
-November 18, 2025 - 23:19:04
+November 18, 2025 - 23:53:17
 Django version 4.2.7, using settings 'ehr_project.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CTRL-BREAK.
@@ -72,20 +72,38 @@ Quit the server with CTRL-BREAK.
 Performing system checks...
 
 System check identified no issues (0 silenced).
-November 18, 2025 - 23:19:08
+November 18, 2025 - 23:53:54
 Django version 4.2.7, using settings 'ehr_project.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CTRL-BREAK.
 
 Performing system checks...
+
+System check identified no issues (0 silenced).
+November 19, 2025 - 00:22:37
+Django version 4.2.7, using settings 'ehr_project.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+Performing system checks...
+
+System check identified no issues (0 silenced).
+November 19, 2025 - 00:22:44
+Django version 4.2.7, using settings 'ehr_project.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
 
 Performing system checks...
 
 Performing system checks...
 
 System check identified no issues (0 silenced).
-November 18, 2025 - 23:20:35
+November 19, 2025 - 00:23:11
 Django version 4.2.7, using settings 'ehr_project.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CTRL-BREAK.
 
+Performing system checks...
+
+System check identified no issues (0 silenced).
+November 19, 2025 - 00:
