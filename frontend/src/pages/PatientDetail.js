@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ReportsCard from '../components/ReportsCard';
 import api from '../services/api';
