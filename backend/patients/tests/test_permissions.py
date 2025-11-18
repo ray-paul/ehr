@@ -15,18 +15,18 @@ class RBACPermissionsTests(TestCase):
         # Create patient record for patient_user
         self.patient = Patient.objects.create(user=self.patient_user, date_of_birth='2000-01-01', gender='M')
 
-        # Create API clients
+        # Create API client
         self.client = APIClient()
 
     def test_provider_can_list_all_patients(self):
-        self.client.login(username='doc', password='pass')
+        self.client.force_authenticate(user=self.doctor)
         resp = self.client.get('/api/patients/patients/')
         self.assertEqual(resp.status_code, 200)
         # Should include the created patient
         self.assertGreaterEqual(len(resp.data.get('results', resp.data)), 1)
 
     def test_patient_sees_their_own_record_only(self):
-        self.client.login(username='pat', password='pass')
+        self.client.force_authenticate(user=self.patient_user)
         resp = self.client.get('/api/patients/patients/')
         self.assertEqual(resp.status_code, 200)
         data = resp.data.get('results', resp.data)
@@ -34,18 +34,18 @@ class RBACPermissionsTests(TestCase):
         self.assertEqual(len(data), 1)
 
     def test_patient_cannot_create_patient(self):
-        self.client.login(username='pat', password='pass')
+        self.client.force_authenticate(user=self.patient_user)
         resp = self.client.post('/api/patients/patients/', {'user': self.patient_user.id, 'date_of_birth': '1990-01-01', 'gender': 'F'})
         self.assertIn(resp.status_code, (400, 403))
 
     def test_provider_can_create_clinical_note(self):
-        self.client.login(username='doc', password='pass')
+        self.client.force_authenticate(user=self.doctor)
         payload = {'patient': self.patient.id, 'subjective': 'X', 'objective': 'Y', 'assessment': 'Z', 'plan': 'A'}
         resp = self.client.post('/api/patients/clinical-notes/', payload)
         self.assertIn(resp.status_code, (201, 200))
 
     def test_patient_cannot_create_clinical_note(self):
-        self.client.login(username='pat', password='pass')
+        self.client.force_authenticate(user=self.patient_user)
         payload = {'patient': self.patient.id, 'subjective': 'X', 'objective': 'Y', 'assessment': 'Z', 'plan': 'A'}
         resp = self.client.post('/api/patients/clinical-notes/', payload)
         self.assertIn(resp.status_code, (400, 403))
