@@ -1,0 +1,16 @@
+/* Utility to control narrow form fields and alignment */
+.form-narrow {
+	width: 60%; /* precise width relative to container; adjust as needed */
+	max-width: 360px; /* cap the width on large screens */
+	min-width: 180px; /* ensure usability on very small screens */
+}
+
+.form-narrow-centered {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.form-narrow-left {
+	margin-left: 0;
+}
+
