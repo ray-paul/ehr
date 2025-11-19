@@ -19,6 +19,21 @@ export const reportsService = {
     const resp = await api.delete(`/reports/${id}/`);
     return resp.status === 204 || resp.status === 200;
   },
+  // Attachments
+  listAttachments: async (reportId) => {
+    const resp = await api.get(`/attachments/?report=${reportId}`);
+    return resp.data;
+  },
+  uploadAttachment: async (reportId, file, attachment_type) => {
+    const fd = new FormData();
+    fd.append('report', reportId);
+    fd.append('file', file);
+    fd.append('attachment_type', attachment_type);
+    const resp = await api.post('/attachments/', fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return resp.data;
+  },
 };
 
 export default reportsService;

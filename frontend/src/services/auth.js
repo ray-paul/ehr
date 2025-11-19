@@ -1,5 +1,7 @@
-// frontend/src/services/auth.js
 import api from './api';
+
+const TOKEN_KEY = 'token';
+const USER_KEY = 'user';
 
 export const authService = {
   login: async (username, password) => {
