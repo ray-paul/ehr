@@ -1,5 +1,9 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
+from datetime import timedelta
+from patients.models import Patient
+from django.contrib.auth.models import User
 
 
 class Report(models.Model):
@@ -31,3 +35,29 @@ class ReportAttachment(models.Model):
 
     def __str__(self):
         return f"{self.get_attachment_type_display()} - {self.file.name}"
+
+
+class Prescription(models.Model):
+    STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('dispensed', 'Dispensed'),
+        ('cancelled', 'Cancelled'),
+        ('expired', 'Expired'),
+    ]
+    
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    drug_name = models.CharField(max_length=200)
+    dosage = models.CharField(max_length=100)
+    frequency = models.CharField(max_length=100)
+    duration = models.CharField(max_length=100)
+    instructions = models.TextField(blank=True)
+    refills = models.IntegerField(default=0)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expiry_date = models.DateField()
+    
+    def save(self, *args, **kwargs):
+        if not self.expiry_date:
+            self.expiry_date = timezone.now().date() + timedelta(days=30)
+        super().save(*args, **kwargs)

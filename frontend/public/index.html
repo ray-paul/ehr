@@ -16,35 +16,5 @@
 		<main class="min-h-screen">
 			<div id="root"></div>
 		</main>
-
-		
-		<script>
-			// Mobile menu functionality
-			document.addEventListener('DOMContentLoaded', function() {
-				const mobileMenuButton = document.querySelector('.mobile-menu-button');
-				const mobileMenu = document.querySelector('.mobile-menu');
-				const mobileSections = document.querySelectorAll('.mobile-nav-section');
-
-				// Toggle mobile menu
-				mobileMenuButton?.addEventListener('click', function() {
-					mobileMenu.classList.toggle('hidden');
-				});
-
-				// Toggle mobile submenus
-				mobileSections.forEach(section => {
-					const button = section.querySelector('button');
-					button?.addEventListener('click', function() {
-						section.classList.toggle('active');
-					});
-				});
-
-				// Close mobile menu when clicking outside
-				document.addEventListener('click', function(event) {
-					if (!event.target.closest('.mobile-menu') && !event.target.closest('.mobile-menu-button')) {
-						mobileMenu.classList.add('hidden');
-					}
-				});
-			});
-		</script>
 	</body>
 </html>

@@ -363,15 +363,29 @@ Not Found: /api/patients/patients/search/
 [19/Nov/2025 23:35:47] "GET /api/patients/patients/search/ HTTP/1.1" 404 23
 Not Found: /api/patients/patients/search/
 [19/Nov/2025 23:35:49] "GET /api/patients/patients/search/ HTTP/1.1" 404 23
-Not Found: /api/patients/patients/search/
-[19/Nov/2025 23:35:49] "GET /api/patients/patients/search/ HTTP/1.1" 404 23
-Not Found: /api/patients/patients/search/
-[19/Nov/2025 23:35:51] "GET /api/patients/patients/search/ HTTP/1.1" 404 23
-Not Found: /api/patients/patients/search/
-[19/Nov/2025 23:35:51] "GET /api/patients/patients/search/ HTTP/1.1" 404 23
-Not Found: /api/patients/patients/search/
-[19/Nov/2025 23:35:52] "GET /api/patients/patients/search/ HTTP/1.1" 404 23
-Not Found: /api/patients/patients/search/
-[19/Nov/2025 23:35:52] "GET /api/patients/patients/search/ HTTP/1.1" 404 23
-[19/Nov/2025 23:36:24] "GET /api/patients/patients/ HTTP/1.1" 200 2
-[19/Nov/2025 23:36:24] "GET /api/patients/patients/ HTTP/1.1" 200 2
+Not Found: /api/patients/patientsC:\Users\Paul\hacksmith\ehr\backend\reports\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Paul\hacksmith\ehr\backend\reports\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Paul\hacksmith\ehr\backend\reports\models.py changed, reloading.
+Watching for file changes with StatReloader
+Exception in thread django-main-thread:
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 1043, in _bootstrap_inner
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\threading.py", line 994, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\utils\autoreload.py", line 64, in wrapper
+    fn(*args, **kwargs)
+    ~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\management\commands\runserver.py", line 133, in inner_run
+    self.check(display_num_errors=True)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\django\core\management\base.py", line 556, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+reports.Prescripti

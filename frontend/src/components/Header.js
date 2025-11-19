@@ -1,8 +1,43 @@
 // src/components/Header.js
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { authService } from '../services/auth';
 
 const Header = () => {
+  const navigate = useNavigate();
+  const currentUser = authService.getCurrentUser();
+  const mobileMenuRef = useRef(null);
+
+  const handleLogout = () => {
+    authService.logout();
+    navigate('/login');
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (mobileMenuRef.current && 
+          !mobileMenuRef.current.contains(event.target) &&
+          !event.target.closest('.mobile-menu-button')) {
+        mobileMenuRef.current.classList.add('hidden');
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  const toggleMobileMenu = () => {
+    if (mobileMenuRef.current) {
+      mobileMenuRef.current.classList.toggle('hidden');
+    }
+  };
+
+  const toggleMobileSubmenu = (section) => {
+    section.classList.toggle('active');
+  };
+
   return (
     <header className="bg-white shadow-lg border-b border-blue-100 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,7 +61,7 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
             {/* Dashboard */}
-            <Link to="/dashboard" className="nav-item group">
+            <Link to="/" className="nav-item group">
               <i className="fas fa-tachometer-alt text-blue-500 group-hover:text-white"></i>
               <span>Dashboard</span>
             </Link>
@@ -68,7 +103,7 @@ const Header = () => {
                 </Link>
                 <Link to="/prescriptions" className="nav-dropdown-item">
                   <i className="fas fa-prescription-bottle text-purple-500"></i>
-                  Prescriptions
+                  e-Scripts & Prescriptions
                 </Link>
                 <Link to="/lab-results" className="nav-dropdown-item">
                   <i className="fas fa-microscope text-purple-500"></i>
@@ -87,13 +122,19 @@ const Header = () => {
             <div className="nav-dropdown group">
               <button className="nav-item">
                 <i className="fas fa-user-circle text-gray-500 group-hover:text-white"></i>
-                <span>Account</span>
+                <span>
+                  {currentUser?.username || currentUser?.email || 'Account'}
+                </span>
                 <i className="fas fa-chevron-down text-xs ml-1 transition-transform group-hover:rotate-180"></i>
               </button>
               <div className="nav-dropdown-menu right-0">
                 <div className="px-4 py-2 border-b border-gray-100">
-                  <p className="text-sm font-medium text-gray-900">Dr. Sarah Johnson</p>
-                  <p className="text-xs text-gray-500">sarah.j@hospital.org</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    {currentUser?.username || currentUser?.email}
+                  </p>
+                  <p className="text-xs text-gray-500 capitalize">
+                    {currentUser?.user_type || 'User'}
+                  </p>
                 </div>
                 <Link to="/profile" className="nav-dropdown-item">
                   <i className="fas fa-user text-gray-500"></i>
@@ -104,10 +145,13 @@ const Header = () => {
                   Settings
                 </Link>
                 <div className="border-t border-gray-100">
-                  <Link to="/logout" className="nav-dropdown-item text-red-600 hover:bg-red-50">
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full text-left nav-dropdown-item text-red-600 hover:bg-red-50"
+                  >
                     <i className="fas fa-sign-out-alt text-red-500"></i>
                     Logout
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
@@ -115,7 +159,10 @@ const Header = () => {
 
           {/* Mobile menu button */}
           <div className="md:hidden">
-            <button className="mobile-menu-button p-2 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+            <button 
+              className="mobile-menu-button p-2 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+              onClick={toggleMobileMenu}
+            >
               <i className="fas fa-bars text-xl"></i>
             </button>
           </div>
@@ -123,15 +170,29 @@ const Header = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className="mobile-menu hidden md:hidden bg-white border-t border-gray-200 shadow-lg">
+      <div 
+        ref={mobileMenuRef}
+        className="mobile-menu hidden md:hidden bg-white border-t border-gray-200 shadow-lg"
+      >
         <div className="px-4 py-3 space-y-1">
-          <Link to="/dashboard" className="mobile-nav-item">
+          <Link 
+            to="/" 
+            className="mobile-nav-item"
+            onClick={() => mobileMenuRef.current?.classList.add('hidden')}
+          >
             <i className="fas fa-tachometer-alt text-blue-500 w-6"></i>
             Dashboard
           </Link>
           
+          {/* Patients Mobile Section */}
           <div className="mobile-nav-section">
-            <button className="mobile-nav-item justify-between">
+            <button 
+              className="mobile-nav-item justify-between"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleMobileSubmenu(e.currentTarget.parentElement);
+              }}
+            >
               <div className="flex items-center">
                 <i className="fas fa-user-injured text-green-500 w-6"></i>
                 Patients
@@ -139,14 +200,39 @@ const Header = () => {
               <i className="fas fa-chevron-down text-xs"></i>
             </button>
             <div className="mobile-submenu pl-8 space-y-1">
-              <Link to="/patients" className="mobile-subnav-item">Patient Records</Link>
-              <Link to="/patients/new" className="mobile-subnav-item">Add New Patient</Link>
-              <Link to="/patients/search" className="mobile-subnav-item">Search Patients</Link>
+              <Link 
+                to="/patients" 
+                className="mobile-subnav-item"
+                onClick={() => mobileMenuRef.current?.classList.add('hidden')}
+              >
+                Patient Records
+              </Link>
+              <Link 
+                to="/patients/new" 
+                className="mobile-subnav-item"
+                onClick={() => mobileMenuRef.current?.classList.add('hidden')}
+              >
+                Add New Patient
+              </Link>
+              <Link 
+                to="/patients/search" 
+                className="mobile-subnav-item"
+                onClick={() => mobileMenuRef.current?.classList.add('hidden')}
+              >
+                Search Patients
+              </Link>
             </div>
           </div>
 
+          {/* Medical Mobile Section */}
           <div className="mobile-nav-section">
-            <button className="mobile-nav-item justify-between">
+            <button 
+              className="mobile-nav-item justify-between"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleMobileSubmenu(e.currentTarget.parentElement);
+              }}
+            >
               <div className="flex items-center">
                 <i className="fas fa-file-medical text-purple-500 w-6"></i>
                 Medical
@@ -154,30 +240,76 @@ const Header = () => {
               <i className="fas fa-chevron-down text-xs"></i>
             </button>
             <div className="mobile-submenu pl-8 space-y-1">
-              <Link to="/reports" className="mobile-subnav-item">Medical Reports</Link>
-              <Link to="/prescriptions" className="mobile-subnav-item">Prescriptions</Link>
-              <Link to="/lab-results" className="mobile-subnav-item">Lab Results</Link>
+              <Link 
+                to="/reports" 
+                className="mobile-subnav-item"
+                onClick={() => mobileMenuRef.current?.classList.add('hidden')}
+              >
+                Medical Reports
+              </Link>
+              <Link 
+                to="/prescriptions" 
+                className="mobile-subnav-item"
+                onClick={() => mobileMenuRef.current?.classList.add('hidden')}
+              >
+                e-Scripts & Prescriptions
+              </Link>
+              <Link 
+                to="/lab-results" 
+                className="mobile-subnav-item"
+                onClick={() => mobileMenuRef.current?.classList.add('hidden')}
+              >
+                Lab Results
+              </Link>
             </div>
           </div>
 
-          <Link to="/appointments" className="mobile-nav-item">
+          {/* Appointments */}
+          <Link 
+            to="/appointments" 
+            className="mobile-nav-item"
+            onClick={() => mobileMenuRef.current?.classList.add('hidden')}
+          >
             <i className="fas fa-calendar-check text-orange-500 w-6"></i>
             Appointments
           </Link>
 
+          {/* User Section */}
           <div className="border-t border-gray-200 pt-2">
-            <Link to="/profile" className="mobile-nav-item">
+            <div className="px-3 py-2">
+              <p className="text-sm font-medium text-gray-900">
+                {currentUser?.username || currentUser?.email}
+              </p>
+              <p className="text-xs text-gray-500 capitalize">
+                {currentUser?.user_type || 'User'}
+              </p>
+            </div>
+            <Link 
+              to="/profile" 
+              className="mobile-nav-item"
+              onClick={() => mobileMenuRef.current?.classList.add('hidden')}
+            >
               <i className="fas fa-user text-gray-500 w-6"></i>
               My Profile
             </Link>
-            <Link to="/settings" className="mobile-nav-item">
+            <Link 
+              to="/settings" 
+              className="mobile-nav-item"
+              onClick={() => mobileMenuRef.current?.classList.add('hidden')}
+            >
               <i className="fas fa-cog text-gray-500 w-6"></i>
               Settings
             </Link>
-            <Link to="/logout" className="mobile-nav-item text-red-600">
+            <button 
+              onClick={() => {
+                handleLogout();
+                mobileMenuRef.current?.classList.add('hidden');
+              }}
+              className="w-full text-left mobile-nav-item text-red-600"
+            >
               <i className="fas fa-sign-out-alt text-red-500 w-6"></i>
               Logout
-            </Link>
+            </button>
           </div>
         </div>
       </div>

@@ -1,10 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 // Remove Bootstrap if you're fully using Tailwind, or keep it for compatibility
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
+import MedicalReports from './pages/MedicalReports';
 import Layout from './components/common/Layout';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
+import Prescriptions from './pages/Prescriptions';
 import Dashboard from './pages/Dashboard';
 import Welcome from './pages/Welcome';
 import PatientList from './pages/PatientList';
@@ -54,6 +56,8 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="reports" element={<MedicalReports />} />
+          <Route path="prescriptions" element={<Prescriptions />} />
         </Route>
       </Routes>
     </Router>
