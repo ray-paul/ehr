@@ -7,6 +7,7 @@ import Layout from './components/common/Layout';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Prescriptions from './pages/Prescriptions';
+import LabResults from './pages/LabResults';
 import Dashboard from './pages/Dashboard';
 import Welcome from './pages/Welcome';
 import PatientList from './pages/PatientList';
@@ -58,6 +59,7 @@ function App() {
           />
           <Route path="reports" element={<MedicalReports />} />
           <Route path="prescriptions" element={<Prescriptions />} />
+          <Route path="lab-results" element={<LabResults />} />
         </Route>
       </Routes>
     </Router>

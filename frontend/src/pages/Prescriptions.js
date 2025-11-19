@@ -1,6 +1,6 @@
 // src/pages/Prescriptions.js
 import React, { useEffect, useState } from 'react';
-import { prescriptionsService } from '../services/prescriptions';
+import  prescriptionsService  from '../services/prescriptions';
 import { patientsService } from '../services/patients';
 import { authService } from '../services/auth';
 import { Link } from 'react-router-dom';
