@@ -8,71 +8,43 @@
 		<meta name="keywords" content="EHR, electronic health records, medical records, patient management, healthcare, medical reports"/>
 		<meta name="author" content="EHR System"/>
 		<title>EHR System - Secure Health Records</title>
+		<!-- Add Font Awesome for icons -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	</head>
 	<body class="bg-gray-50 text-gray-800">
 		
-		<header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
-			<nav class="navbar flex justify-between items-center h-16 px-4 sm:px-6">
-				<a href="/" class="flex items-center space-x-2">
-					<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-pulse text-blue-600">
-						<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-						<path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>
-					</svg>
-					<span class="text-xl font-bold text-gray-800">EHR System</span>
-				</a>
-				<ul class="hidden md:flex gap-6">
-					<li>
-						<a class="hover:text-blue-600 transition-colors" href="/dashboard">Dashboard</a>
-					</li>
-					<li>
-						<a class="hover:text-blue-600 transition-colors" href="/patients">Patients</a>
-					</li>
-					<li>
-						<a class="hover:text-blue-600 transition-colors" href="/appointments">Appointments</a>
-					</li>
-					<li>
-						<a class="hover:text-blue-600 transition-colors" href="/reports">Reports</a>
-					</li>
-				</ul>
-				<div class="flex items-center space-x-4">
-					<button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-						Login
-					</button>
-				</div>
-			</nav>
-		</header>
-
 		<main class="min-h-screen">
 			<div id="root"></div>
 		</main>
 
-		<footer class="bg-gray-800 text-white py-8">
-			<div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-				<div>
-					<h3 class="text-lg font-bold mb-4">EHR System</h3>
-					<p class="text-gray-300">Secure and reliable Electronic Health Record management for healthcare professionals.</p>
-				</div>
-				<div>
-					<h3 class="text-lg font-bold mb-4">Quick Links</h3>
-					<ul class="space-y-2">
-						<li><a href="/dashboard" class="hover:text-blue-300 transition-colors">Dashboard</a></li>
-						<li><a href="/patients" class="hover:text-blue-300 transition-colors">Patient Records</a></li>
-						<li><a href="/appointments" class="hover:text-blue-300 transition-colors">Appointments</a></li>
-						<li><a href="/reports" class="hover:text-blue-300 transition-colors">Medical Reports</a></li>
-					</ul>
-				</div>
-				<div>
-					<h3 class="text-lg font-bold mb-4">Support</h3>
-					<ul class="space-y-2 text-gray-300">
-						<li>Email: support@ehrsystem.com</li>
-						<li>Phone: +1 (555) 123-HELP</li>
-						<li>Emergency: 24/7 Support</li>
-					</ul>
-				</div>
-			</div>
-			<div class="container mx-auto px-4 mt-8 pt-6 border-t border-gray-700 text-center">
-				<p>&copy; 2024 EHR System. All rights reserved. HIPAA Compliant.</p>
-			</div>
-		</footer>
+		
+		<script>
+			// Mobile menu functionality
+			document.addEventListener('DOMContentLoaded', function() {
+				const mobileMenuButton = document.querySelector('.mobile-menu-button');
+				const mobileMenu = document.querySelector('.mobile-menu');
+				const mobileSections = document.querySelectorAll('.mobile-nav-section');
+
+				// Toggle mobile menu
+				mobileMenuButton?.addEventListener('click', function() {
+					mobileMenu.classList.toggle('hidden');
+				});
+
+				// Toggle mobile submenus
+				mobileSections.forEach(section => {
+					const button = section.querySelector('button');
+					button?.addEventListener('click', function() {
+						section.classList.toggle('active');
+					});
+				});
+
+				// Close mobile menu when clicking outside
+				document.addEventListener('click', function(event) {
+					if (!event.target.closest('.mobile-menu') && !event.target.closest('.mobile-menu-button')) {
+						mobileMenu.classList.add('hidden');
+					}
+				});
+			});
+		</script>
 	</body>
 </html>

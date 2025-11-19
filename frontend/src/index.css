@@ -2,4 +2,333 @@
 @tailwind components;
 @tailwind utilities;
 
-/* You can add global customizations here using Tailwind's @apply if needed */
+/* Custom base styles for EHR system */
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    background-color: #f9fafb;
+    color: #111827;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+  }
+
+  /* Better focus styles for accessibility */
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  a:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+}
+
+/* Custom component styles */
+@layer components {
+  /* Enhanced card component */
+  .card {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s;
+  }
+
+  .card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Primary button */
+  .btn-primary {
+    background-color: #2563eb;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    position: relative;
+  }
+
+  .btn-primary:hover {
+    background-color: #1d4ed8;
+  }
+
+  .btn-primary:focus {
+    background-color: #1d4ed8;
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    background-color: #f3f4f6;
+    color: #374151;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    position: relative;
+  }
+
+  .btn-secondary:hover {
+    background-color: #e5e7eb;
+  }
+
+  .btn-secondary:focus {
+    background-color: #e5e7eb;
+    outline: 2px solid #6b7280;
+    outline-offset: 2px;
+  }
+
+  /* Success button */
+  .btn-success {
+    background-color: #059669;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    position: relative;
+  }
+
+  .btn-success:hover {
+    background-color: #047857;
+  }
+
+  .btn-success:focus {
+    background-color: #047857;
+    outline: 2px solid #10b981;
+    outline-offset: 2px;
+  }
+
+  /* Input fields */
+  .input-field {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+  }
+
+  .input-field:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 0;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Table styles for medical data */
+  .medical-table {
+    width: 100%;
+    background: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  
+  .medical-table th {
+    background-color: #f9fafb;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .medical-table td {
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    color: #111827;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  /* Status badges */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .status-active {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+  
+  .status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  
+  .status-critical {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+
+  /* Navigation Styles */
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: #374151;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .nav-item:hover {
+    background-color: #2563eb;
+    color: white;
+  }
+
+  .nav-dropdown {
+    position: relative;
+  }
+
+  .nav-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.25rem;
+    width: 14rem;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e5e7eb;
+    padding: 0.5rem 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    transform: translateY(-0.5rem);
+  }
+
+  .group:hover .nav-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    color: #374151;
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  .nav-dropdown-item:hover {
+    background-color: #eff6ff;
+    color: #2563eb;
+  }
+
+  /* Mobile Navigation */
+  .mobile-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    color: #374151;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .mobile-nav-item:hover {
+    background-color: #eff6ff;
+    color: #2563eb;
+  }
+
+  .mobile-nav-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .mobile-submenu {
+    display: none;
+  }
+
+  .mobile-subnav-item {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .mobile-subnav-item:hover {
+    background-color: #f9fafb;
+    color: #111827;
+  }
+
+  /* Show mobile submenu when active */
+  .mobile-nav-section.active .mobile-submenu {
+    display: block;
+  }
+}
+
+/* Custom utilities */
+@layer utilities {
+  /* Text balance for better readability */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Smooth transitions for float animations */
+  .float-card {
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 600ms cubic-bezier(.22,.9,.3,1), 
+                opacity 600ms ease,
+                box-shadow 300ms ease;
+  }
+
+  .float-card.in-view {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* Medical color scheme extensions */
+  .bg-medical-light {
+    background-color: #eff6ff;
+  }
+  
+  .text-medical-primary {
+    color: #2563eb;
+  }
+  
+  .border-medical {
+    border-color: #bfdbfe;
+  }
+}
+
+/* Print styles for medical reports */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .card {
+    box-shadow: none;
+    border: 1px solid #d1d5db;
+  }
+}

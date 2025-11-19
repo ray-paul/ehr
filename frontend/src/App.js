@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// Remove Bootstrap if you're fully using Tailwind, or keep it for compatibility
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Layout from './components/common/Layout';
 import Login from './components/auth/Login';
@@ -21,9 +22,13 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Public routes - no header/footer */}
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/login" element={!currentUser ? <Login /> : <Navigate to="/" />} />
         <Route path="/register" element={!currentUser ? <Register /> : <Navigate to="/" />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        
+        {/* Protected routes with Layout (includes Header & Footer) */}
         <Route path="/" element={
           <PrivateRoute>
             <Layout />
@@ -34,7 +39,7 @@ function App() {
           <Route
             path="patients/new"
             element={
-              <PrivateRoute roles={[ 'doctor', 'admin' ]}>
+              <PrivateRoute roles={['doctor', 'admin']}>
                 <PatientForm />
               </PrivateRoute>
             }
@@ -44,13 +49,12 @@ function App() {
           <Route
             path="appointments/new"
             element={
-              <PrivateRoute roles={[ 'doctor', 'admin' ]}>
+              <PrivateRoute roles={['doctor', 'admin']}>
                 <AppointmentForm />
               </PrivateRoute>
             }
           />
         </Route>
-        <Route path="/unauthorized" element={<Unauthorized />} />
       </Routes>
     </Router>
   );
