@@ -1,6 +1,6 @@
 // src/pages/LabResults.js
 import React, { useEffect, useState } from 'react';
-import labResultsService from '../services/labResults';
+import labResultsService from '../services/LabResults';
 import { patientsService } from '../services/patients';
 import { authService } from '../services/auth';
 import { Link } from 'react-router-dom';
