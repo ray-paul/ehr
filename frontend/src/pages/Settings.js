@@ -20,14 +20,7 @@ const Settings = () => {
     appointmentReminders: true,
     labResults: true,
     emergencyAlerts: false,
-    prescriptionUpdates: true,
-    systemUpdates: false
-  });
-
-  const [privacySettings, setPrivacySettings] = useState({
-    shareData: false,
-    showOnlineStatus: true,
-    allowMessages: true
+    prescriptionUpdates: true
   });
 
   useEffect(() => {
@@ -72,48 +65,14 @@ const Settings = () => {
   const handleNotificationChange = (setting, value) => {
     const updatedSettings = { ...notificationSettings, [setting]: value };
     setNotificationSettings(updatedSettings);
-    
-    // Simulate API call to save settings
-    setTimeout(() => {
-      showMessage('Notification settings updated');
-    }, 300);
-  };
-
-  const handlePrivacyChange = (setting, value) => {
-    const updatedSettings = { ...privacySettings, [setting]: value };
-    setPrivacySettings(updatedSettings);
-    
-    // Simulate API call to save settings
-    setTimeout(() => {
-      showMessage('Privacy settings updated');
-    }, 300);
-  };
-
-  const handleDataExport = async () => {
-    setLoading(true);
-    try {
-      // Simulate data export
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      showMessage('Your data export has been prepared. You will receive an email with download instructions.');
-    } catch (error) {
-      showMessage('Error preparing data export', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleAccountDeletion = () => {
-    if (window.confirm('Are you sure you want to request account deletion? This action cannot be undone and all your data will be permanently deleted.')) {
-      showMessage('Account deletion request submitted. Our team will contact you shortly.', 'warning');
-    }
+    showMessage('Notification settings updated');
   };
 
   const tabs = [
-    { id: 'account', label: 'Account', icon: 'fa-user-cog', color: 'primary' },
-    { id: 'security', label: 'Security', icon: 'fa-shield-alt', color: 'success' },
-    { id: 'notifications', label: 'Notifications', icon: 'fa-bell', color: 'warning' },
-    { id: 'privacy', label: 'Privacy', icon: 'fa-lock', color: 'info' },
-    { id: 'preferences', label: 'Preferences', icon: 'fa-sliders-h', color: 'secondary' }
+    { id: 'account', label: 'Account', icon: '👤' },
+    { id: 'security', label: 'Security', icon: '🔒' },
+    { id: 'notifications', label: 'Notifications', icon: '🔔' },
+    { id: 'privacy', label: 'Privacy', icon: '🛡️' }
   ];
 
   const getPasswordStrength = (password) => {
@@ -126,11 +85,11 @@ const Settings = () => {
     if (/[^A-Za-z0-9]/.test(password)) strength += 1;
     
     const strengths = [
-      { label: 'Very Weak', color: 'danger' },
-      { label: 'Weak', color: 'warning' },
-      { label: 'Fair', color: 'info' },
-      { label: 'Good', color: 'primary' },
-      { label: 'Strong', color: 'success' }
+      { label: 'Very Weak', color: 'text-red-500' },
+      { label: 'Weak', color: 'text-orange-500' },
+      { label: 'Fair', color: 'text-yellow-500' },
+      { label: 'Good', color: 'text-blue-500' },
+      { label: 'Strong', color: 'text-green-500' }
     ];
     
     return { ...strengths[strength], strength };
@@ -139,511 +98,373 @@ const Settings = () => {
   const passwordStrength = getPasswordStrength(passwordData.new_password);
 
   return (
-    <div className="container mt-4">
-      <div className="row">
-        <div className="col-lg-3 mb-4">
-          <div className="card shadow-sm">
-            <div className="card-header bg-white border-bottom-0">
-              <h5 className="card-title mb-0">
-                <i className="fas fa-cog me-2 text-primary"></i>
-                Settings
-              </h5>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <div className="bg-blue-600 p-3 rounded-full">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="28" 
+                height="28" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                className="text-white"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
             </div>
-            <div className="card-body p-0">
-              <nav className="nav flex-column">
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Account Settings
+          </h2>
+          <p className="text-gray-600 text-lg">
+            Manage your account preferences and security
+          </p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar Navigation */}
+          <div className="lg:w-1/4">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+              <nav className="space-y-2">
                 {tabs.map(tab => (
                   <button
                     key={tab.id}
-                    className={`nav-link text-start px-4 py-3 border-0 rounded-0 ${
+                    className={`w-full flex items-center px-4 py-3 rounded-xl text-left transition-all duration-200 ${
                       activeTab === tab.id 
-                        ? `bg-${tab.color} text-white` 
-                        : 'text-dark hover-bg-light'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                     }`}
                     onClick={() => setActiveTab(tab.id)}
                   >
-                    <i className={`fas ${tab.icon} me-3`}></i>
-                    {tab.label}
+                    <span className="text-xl mr-3">{tab.icon}</span>
+                    <span className="font-medium">{tab.label}</span>
                   </button>
                 ))}
               </nav>
-            </div>
-          </div>
 
-          {/* Quick Stats */}
-          <div className="card shadow-sm mt-4">
-            <div className="card-body">
-              <h6 className="card-title">
-                <i className="fas fa-chart-bar me-2 text-info"></i>
-                Account Overview
-              </h6>
-              <div className="mt-3">
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <small className="text-muted">Account Status</small>
-                  <span className={`badge bg-${user?.is_verified ? 'success' : 'warning'}`}>
-                    {user?.is_verified ? 'Verified' : 'Pending'}
-                  </span>
-                </div>
-                <div className="d-flex justify-content-between align-items-center mb-2">
-                  <small className="text-muted">Member Since</small>
-                  <small className="text-muted">
-                    {user?.date_joined ? new Date(user.date_joined).toLocaleDateString() : 'N/A'}
-                  </small>
-                </div>
-                <div className="d-flex justify-content-between align-items-center">
-                  <small className="text-muted">User Role</small>
-                  <small className="text-capitalize text-primary">{user?.user_type || 'User'}</small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-lg-9">
-          {/* Message Alert */}
-          {message.text && (
-            <div className={`alert alert-${message.type === 'error' ? 'danger' : message.type} alert-dismissible fade show`}>
-              <i className={`fas ${
-                message.type === 'error' ? 'fa-exclamation-triangle' :
-                message.type === 'warning' ? 'fa-exclamation-circle' : 'fa-check-circle'
-              } me-2`}></i>
-              {message.text}
-              <button 
-                type="button" 
-                className="btn-close" 
-                onClick={() => setMessage({ text: '', type: '' })}
-              ></button>
-            </div>
-          )}
-
-          {/* Account Settings */}
-          {activeTab === 'account' && (
-            <div className="card shadow-sm">
-              <div className="card-header bg-white">
-                <h5 className="card-title mb-0">
-                  <i className="fas fa-user-cog me-2 text-primary"></i>
-                  Account Settings
-                </h5>
-              </div>
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="setting-group">
-                      <h6 className="setting-title">
-                        <i className="fas fa-id-card me-2 text-info"></i>
-                        Basic Information
-                      </h6>
-                      <p className="text-muted mb-3">Your basic account details and preferences</p>
-                      
-                      <div className="info-item">
-                        <label className="form-label">Full Name</label>
-                        <p className="info-value">{user?.first_name || 'Not'} {user?.last_name || 'Set'}</p>
-                      </div>
-                      
-                      <div className="info-item">
-                        <label className="form-label">Email Address</label>
-                        <p className="info-value">{user?.email || 'Not set'}</p>
-                      </div>
-                      
-                      <div className="info-item">
-                        <label className="form-label">Username</label>
-                        <p className="info-value">{user?.username || 'Not set'}</p>
-                      </div>
-                    </div>
+              {/* User Info Card */}
+              <div className="mt-8 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+                <div className="flex items-center space-x-3">
+                  <div className="bg-blue-100 p-2 rounded-full">
+                    <span className="text-blue-600 text-sm font-medium">
+                      {user?.user_type?.charAt(0).toUpperCase() || 'U'}
+                    </span>
                   </div>
-                  
-                  <div className="col-md-6">
-                    <div className="setting-group">
-                      <h6 className="setting-title">
-                        <i className="fas fa-briefcase me-2 text-success"></i>
-                        Professional Information
-                      </h6>
-                      <p className="text-muted mb-3">Your professional details and role</p>
-                      
-                      <div className="info-item">
-                        <label className="form-label">User Role</label>
-                        <p className="info-value text-capitalize">{user?.user_type || 'Not set'}</p>
-                      </div>
-                      
-                      {user?.work_id && (
-                        <div className="info-item">
-                          <label className="form-label">Work ID</label>
-                          <p className="info-value">{user.work_id}</p>
-                        </div>
-                      )}
-                      
-                      {user?.specialization && (
-                        <div className="info-item">
-                          <label className="form-label">Specialization</label>
-                          <p className="info-value">{user.specialization}</p>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="mt-4">
-                      <button className="btn btn-outline-primary w-100">
-                        <i className="fas fa-edit me-2"></i>
-                        Edit Profile Information
-                      </button>
-                    </div>
+                  <div>
+                    <p className="font-medium text-gray-900 text-sm">
+                      {user?.first_name || 'User'} {user?.last_name || ''}
+                    </p>
+                    <p className="text-gray-500 text-xs capitalize">
+                      {user?.user_type || 'User'}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-blue-200">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-gray-500">Status</span>
+                    <span className={`px-2 py-1 rounded-full ${
+                      user?.is_verified 
+                        ? 'bg-green-100 text-green-700' 
+                        : 'bg-yellow-100 text-yellow-700'
+                    }`}>
+                      {user?.is_verified ? 'Verified' : 'Pending'}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
-          )}
+          </div>
 
-          {/* Security Settings */}
-          {activeTab === 'security' && (
-            <div className="card shadow-sm">
-              <div className="card-header bg-white">
-                <h5 className="card-title mb-0">
-                  <i className="fas fa-shield-alt me-2 text-success"></i>
-                  Security Settings
-                </h5>
+          {/* Main Content */}
+          <div className="lg:w-3/4">
+            {/* Message Alert */}
+            {message.text && (
+              <div className={`mb-6 rounded-xl p-4 border ${
+                message.type === 'error' 
+                  ? 'bg-red-50 border-red-200 text-red-800' 
+                  : 'bg-green-50 border-green-200 text-green-800'
+              }`}>
+                <div className="flex items-center">
+                  <svg className={`w-5 h-5 mr-2 ${
+                    message.type === 'error' ? 'text-red-500' : 'text-green-500'
+                  }`} fill="currentColor" viewBox="0 0 20 20">
+                    {message.type === 'error' ? (
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
+                    ) : (
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                    )}
+                  </svg>
+                  <span className="font-medium">{message.text}</span>
+                </div>
               </div>
-              <div className="card-body">
-                <form onSubmit={handlePasswordSubmit}>
-                  <div className="setting-group">
-                    <h6 className="setting-title">
-                      <i className="fas fa-key me-2 text-warning"></i>
-                      Change Password
-                    </h6>
-                    <p className="text-muted mb-4">Update your password to keep your account secure</p>
-                    
-                    <div className="row">
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label">Current Password</label>
+            )}
+
+            {/* Account Settings */}
+            {activeTab === 'account' && (
+              <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+                <div className="flex items-center mb-6">
+                  <span className="text-2xl mr-3">👤</span>
+                  <h3 className="text-2xl font-bold text-gray-900">Account Information</h3>
+                </div>
+                
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 mb-4">Personal Details</h4>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                          <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <p className="text-gray-900">{user?.first_name || 'Not'} {user?.last_name || 'Set'}</p>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                          <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <p className="text-gray-900">{user?.email || 'Not set'}</p>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                          <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <p className="text-gray-900">{user?.username || 'Not set'}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 mb-4">Professional Information</h4>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">User Role</label>
+                          <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <p className="text-gray-900 capitalize">{user?.user_type || 'Not set'}</p>
+                          </div>
+                        </div>
+                        {user?.work_id && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Work ID</label>
+                            <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                              <p className="text-gray-900">{user.work_id}</p>
+                            </div>
+                          </div>
+                        )}
+                        {user?.specialization && (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Specialization</label>
+                            <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                              <p className="text-gray-900">{user.specialization}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                      Edit Profile Information
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Security Settings */}
+            {activeTab === 'security' && (
+              <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+                <div className="flex items-center mb-6">
+                  <span className="text-2xl mr-3">🔒</span>
+                  <h3 className="text-2xl font-bold text-gray-900">Security Settings</h3>
+                </div>
+
+                <form onSubmit={handlePasswordSubmit} className="space-y-6">
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Change Password</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label htmlFor="current_password" className="block text-sm font-medium text-gray-700 mb-2">
+                          Current Password
+                        </label>
                         <input
                           type="password"
-                          className="form-control"
+                          id="current_password"
                           name="current_password"
                           value={passwordData.current_password}
                           onChange={handlePasswordChange}
                           required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
                           placeholder="Enter current password"
+                          disabled={loading}
                         />
                       </div>
-                    </div>
-                    
-                    <div className="row">
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label">New Password</label>
+
+                      <div>
+                        <label htmlFor="new_password" className="block text-sm font-medium text-gray-700 mb-2">
+                          New Password
+                        </label>
                         <input
                           type="password"
-                          className="form-control"
+                          id="new_password"
                           name="new_password"
                           value={passwordData.new_password}
                           onChange={handlePasswordChange}
                           required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
                           placeholder="Enter new password"
+                          disabled={loading}
                         />
                         {passwordData.new_password && (
                           <div className="mt-2">
-                            <div className="progress" style={{ height: '6px' }}>
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-sm text-gray-600">Password strength</span>
+                              <span className={`text-sm font-medium ${passwordStrength.color}`}>
+                                {passwordStrength.label}
+                              </span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2">
                               <div 
-                                className={`progress-bar bg-${passwordStrength.color}`}
-                                style={{ width: `${(passwordStrength.strength / 4) * 100}%` }}
+                                className={`h-2 rounded-full transition-all duration-300 ${
+                                  passwordStrength.strength === 0 ? 'bg-red-500 w-1/4' :
+                                  passwordStrength.strength === 1 ? 'bg-orange-500 w-2/4' :
+                                  passwordStrength.strength === 2 ? 'bg-yellow-500 w-3/4' :
+                                  passwordStrength.strength >= 3 ? 'bg-green-500 w-full' : ''
+                                }`}
                               ></div>
                             </div>
-                            <small className={`text-${passwordStrength.color}`}>
-                              Password strength: {passwordStrength.label}
-                            </small>
                           </div>
                         )}
                       </div>
-                      
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label">Confirm New Password</label>
+
+                      <div>
+                        <label htmlFor="confirm_password" className="block text-sm font-medium text-gray-700 mb-2">
+                          Confirm New Password
+                        </label>
                         <input
                           type="password"
-                          className="form-control"
+                          id="confirm_password"
                           name="confirm_password"
                           value={passwordData.confirm_password}
                           onChange={handlePasswordChange}
                           required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
                           placeholder="Confirm new password"
+                          disabled={loading}
                         />
                       </div>
                     </div>
-                    
-                    <button 
-                      type="submit" 
-                      className="btn btn-success"
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <>
-                          <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                          Updating Password...
-                        </>
-                      ) : (
-                        <>
-                          <i className="fas fa-save me-2"></i>
-                          Update Password
-                        </>
-                      )}
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? (
+                      <div className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Updating Password...
+                      </div>
+                    ) : (
+                      'Update Password'
+                    )}
+                  </button>
+                </form>
+              </div>
+            )}
+
+            {/* Notification Settings */}
+            {activeTab === 'notifications' && (
+              <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+                <div className="flex items-center mb-6">
+                  <span className="text-2xl mr-3">🔔</span>
+                  <h3 className="text-2xl font-bold text-gray-900">Notification Settings</h3>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Email Notifications</h4>
+                    <div className="space-y-4">
+                      {Object.entries(notificationSettings).map(([key, value]) => (
+                        <div key={key} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+                          <div>
+                            <p className="font-medium text-gray-900">
+                              {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                            </p>
+                            <p className="text-sm text-gray-600 mt-1">
+                              {key === 'emailNotifications' && 'Receive general email notifications'}
+                              {key === 'appointmentReminders' && 'Get reminded about upcoming appointments'}
+                              {key === 'labResults' && 'Notify when lab results are available'}
+                              {key === 'emergencyAlerts' && 'Receive emergency patient alerts'}
+                              {key === 'prescriptionUpdates' && 'Updates about prescription status'}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => handleNotificationChange(key, !value)}
+                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                              value ? 'bg-blue-600' : 'bg-gray-200'
+                            }`}
+                          >
+                            <span
+                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                value ? 'translate-x-5' : 'translate-x-0'
+                              }`}
+                            />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Privacy Settings */}
+            {activeTab === 'privacy' && (
+              <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+                <div className="flex items-center mb-6">
+                  <span className="text-2xl mr-3">🛡️</span>
+                  <h3 className="text-2xl font-bold text-gray-900">Privacy & Data</h3>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="p-6 bg-blue-50 rounded-xl border border-blue-200">
+                    <h4 className="text-lg font-semibold text-blue-900 mb-2">Data Export</h4>
+                    <p className="text-blue-700 mb-4">
+                      Download a copy of all your personal data stored in the system.
+                    </p>
+                    <button className="bg-white text-blue-600 py-2 px-4 rounded-lg font-medium hover:bg-blue-50 border border-blue-200 transition-colors duration-200">
+                      Export My Data
                     </button>
                   </div>
-                </form>
 
-                <div className="setting-group mt-5 pt-4 border-top">
-                  <h6 className="setting-title">
-                    <i className="fas fa-laptop me-2 text-info"></i>
-                    Session Management
-                  </h6>
-                  <p className="text-muted mb-3">Manage your active sessions across devices</p>
-                  
-                  <button className="btn btn-outline-danger">
-                    <i className="fas fa-sign-out-alt me-2"></i>
-                    Logout All Other Sessions
-                  </button>
-                  <p className="text-muted mt-2 small">
-                    This will log you out from all other devices except this one.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Notification Settings */}
-          {activeTab === 'notifications' && (
-            <div className="card shadow-sm">
-              <div className="card-header bg-white">
-                <h5 className="card-title mb-0">
-                  <i className="fas fa-bell me-2 text-warning"></i>
-                  Notification Settings
-                </h5>
-              </div>
-              <div className="card-body">
-                <div className="setting-group">
-                  <h6 className="setting-title">
-                    <i className="fas fa-envelope me-2 text-primary"></i>
-                    Email Notifications
-                  </h6>
-                  <p className="text-muted mb-3">Control how we notify you via email</p>
-                  
-                  {Object.entries(notificationSettings).map(([key, value]) => (
-                    <div key={key} className="form-check form-switch mb-3 p-3 bg-light rounded">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id={key}
-                        checked={value}
-                        onChange={(e) => handleNotificationChange(key, e.target.checked)}
-                      />
-                      <label className="form-check-label" htmlFor={key}>
-                        <strong>
-                          {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                        </strong>
-                        <br />
-                        <small className="text-muted">
-                          {key === 'emailNotifications' && 'Receive general email notifications'}
-                          {key === 'appointmentReminders' && 'Get reminded about upcoming appointments'}
-                          {key === 'labResults' && 'Notify when lab results are available'}
-                          {key === 'emergencyAlerts' && 'Receive emergency patient alerts (doctors only)'}
-                          {key === 'prescriptionUpdates' && 'Updates about prescription status'}
-                          {key === 'systemUpdates' && 'Important system maintenance notifications'}
-                        </small>
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Privacy Settings */}
-          {activeTab === 'privacy' && (
-            <div className="card shadow-sm">
-              <div className="card-header bg-white">
-                <h5 className="card-title mb-0">
-                  <i className="fas fa-lock me-2 text-info"></i>
-                  Privacy Settings
-                </h5>
-              </div>
-              <div className="card-body">
-                <div className="setting-group">
-                  <h6 className="setting-title">
-                    <i className="fas fa-shield-alt me-2 text-success"></i>
-                    Data Privacy
-                  </h6>
-                  <p className="text-muted mb-3">Control how your data is used and shared</p>
-                  
-                  {Object.entries(privacySettings).map(([key, value]) => (
-                    <div key={key} className="form-check form-switch mb-3 p-3 bg-light rounded">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id={`privacy-${key}`}
-                        checked={value}
-                        onChange={(e) => handlePrivacyChange(key, e.target.checked)}
-                      />
-                      <label className="form-check-label" htmlFor={`privacy-${key}`}>
-                        <strong>
-                          {key === 'shareData' && 'Share Anonymous Data for Research'}
-                          {key === 'showOnlineStatus' && 'Show Online Status'}
-                          {key === 'allowMessages' && 'Allow Direct Messages'}
-                        </strong>
-                        <br />
-                        <small className="text-muted">
-                          {key === 'shareData' && 'Your personal information will never be shared. Only anonymized medical data may be used for research purposes.'}
-                          {key === 'showOnlineStatus' && 'Allow other users to see when you are active in the system'}
-                          {key === 'allowMessages' && 'Allow patients and colleagues to send you direct messages'}
-                        </small>
-                      </label>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="setting-group mt-5 pt-4 border-top">
-                  <h6 className="setting-title">
-                    <i className="fas fa-download me-2 text-primary"></i>
-                    Data Management
-                  </h6>
-                  <p className="text-muted mb-3">Manage your personal data</p>
-                  
-                  <div className="row g-3">
-                    <div className="col-md-6">
-                      <button 
-                        className="btn btn-outline-primary w-100"
-                        onClick={handleDataExport}
-                        disabled={loading}
-                      >
-                        {loading ? (
-                          <>
-                            <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                            Preparing Export...
-                          </>
-                        ) : (
-                          <>
-                            <i className="fas fa-download me-2"></i>
-                            Export My Data
-                          </>
-                        )}
-                      </button>
-                      <p className="text-muted mt-2 small">
-                        Download a copy of all your personal data stored in the system.
-                      </p>
-                    </div>
-                    
-                    <div className="col-md-6">
-                      <button 
-                        className="btn btn-outline-danger w-100"
-                        onClick={handleAccountDeletion}
-                      >
-                        <i className="fas fa-trash me-2"></i>
-                        Request Account Deletion
-                      </button>
-                      <p className="text-muted mt-2 small">
-                        Permanently delete your account and all associated data.
-                      </p>
-                    </div>
+                  <div className="p-6 bg-red-50 rounded-xl border border-red-200">
+                    <h4 className="text-lg font-semibold text-red-900 mb-2">Account Deletion</h4>
+                    <p className="text-red-700 mb-4">
+                      Permanently delete your account and all associated data. This action cannot be undone.
+                    </p>
+                    <button className="bg-white text-red-600 py-2 px-4 rounded-lg font-medium hover:bg-red-50 border border-red-200 transition-colors duration-200">
+                      Request Account Deletion
+                    </button>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-
-          {/* Preferences */}
-          {activeTab === 'preferences' && (
-            <div className="card shadow-sm">
-              <div className="card-header bg-white">
-                <h5 className="card-title mb-0">
-                  <i className="fas fa-sliders-h me-2 text-secondary"></i>
-                  Preferences
-                </h5>
-              </div>
-              <div className="card-body">
-                <div className="setting-group">
-                  <h6 className="setting-title">
-                    <i className="fas fa-palette me-2 text-primary"></i>
-                    Display Preferences
-                  </h6>
-                  <p className="text-muted mb-3">Customize your interface experience</p>
-                  
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Theme</label>
-                      <select className="form-select">
-                        <option>Light Theme</option>
-                        <option>Dark Theme</option>
-                        <option>Auto (System Preference)</option>
-                      </select>
-                    </div>
-                    
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Language</label>
-                      <select className="form-select">
-                        <option>English</option>
-                        <option>Spanish</option>
-                        <option>French</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Time Zone</label>
-                      <select className="form-select">
-                        <option>UTC-05:00 Eastern Time</option>
-                        <option>UTC-06:00 Central Time</option>
-                        <option>UTC-07:00 Mountain Time</option>
-                        <option>UTC-08:00 Pacific Time</option>
-                      </select>
-                    </div>
-                    
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Date Format</label>
-                      <select className="form-select">
-                        <option>MM/DD/YYYY</option>
-                        <option>DD/MM/YYYY</option>
-                        <option>YYYY-MM-DD</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <button className="btn btn-primary">
-                    <i className="fas fa-save me-2"></i>
-                    Save Preferences
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .hover-bg-light:hover {
-          background-color: #f8f9fa !important;
-        }
-        .setting-group {
-          margin-bottom: 2rem;
-        }
-        .setting-title {
-          color: #2c3e50;
-          font-weight: 600;
-          margin-bottom: 0.5rem;
-        }
-        .info-item {
-          margin-bottom: 1.5rem;
-        }
-        .info-value {
-          font-weight: 500;
-          color: #495057;
-          margin-bottom: 0;
-        }
-        .form-check-input:checked {
-          background-color: #198754;
-          border-color: #198754;
-        }
-        .nav-link {
-          transition: all 0.3s ease;
-          border-left: 3px solid transparent;
-        }
-        .nav-link.active {
-          border-left-color: #0d6efd;
-        }
-      `}</style>
     </div>
   );
 };
