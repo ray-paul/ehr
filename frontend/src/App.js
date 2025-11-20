@@ -13,7 +13,7 @@ import Welcome from './pages/Welcome';
 import PatientList from './pages/PatientList';
 import PatientForm from './components/patients/PatientForm';
 import PatientDetail from './pages/PatientDetail';
-import Appointments from './pages/AppointmentsDetail';
+import Appointments from './pages/Appointments';
 import AppointmentForm from './components/appointments/AppointmentForm';
 import Unauthorized from './pages/Unauthorized';
 import PrivateRoute from './components/common/PrivateRoute';

@@ -3,7 +3,8 @@ from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
 from patients.models import Patient
-from django.contrib.auth.models import User
+# REMOVE duplicate import: from django.conf import settings
+# REMOVE: from django.contrib.auth import get_user_model  # Not needed
 
 
 class Report(models.Model):
@@ -11,7 +12,7 @@ class Report(models.Model):
     content = models.TextField(blank=True)
     # Associate report with a Patient (nullable to ease migrations)
     patient = models.ForeignKey('patients.Patient', on_delete=models.CASCADE, null=True, blank=True, related_name='reports')
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports_created')  # ADDED related_name
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -30,7 +31,7 @@ class ReportAttachment(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='attachments')
     file = models.FileField(upload_to='report_attachments/')
     attachment_type = models.CharField(max_length=32, choices=ATTACHMENT_TYPES)
-    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='report_attachments_uploaded')  # ADDED related_name
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -53,7 +54,7 @@ class Prescription(models.Model):
     instructions = models.TextField(blank=True)
     refills = models.IntegerField(default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='prescriptions_created')  # FIXED: Changed User to settings.AUTH_USER_MODEL
     created_at = models.DateTimeField(auto_now_add=True)
     expiry_date = models.DateField()
     
@@ -61,3 +62,6 @@ class Prescription(models.Model):
         if not self.expiry_date:
             self.expiry_date = timezone.now().date() + timedelta(days=30)
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.drug_name} - {self.patient.user.get_full_name()}"

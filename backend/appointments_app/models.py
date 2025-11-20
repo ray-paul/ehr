@@ -1,9 +1,9 @@
 # backend/appointments_app/models.py
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings  # ADD THIS IMPORT
 from patients.models import Patient
 
-class Appointment(models.Model):
+class AppointmentRequest(models.Model):
     STATUS_CHOICES = (
         ('requested', 'Requested'),
         ('proposed', 'Counter Proposed'),
@@ -13,7 +13,7 @@ class Appointment(models.Model):
     )
     
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    provider = models.ForeignKey(User, on_delete=models.CASCADE)
+    provider = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='provider_appointments')  # CHANGED THIS
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     
@@ -34,8 +34,8 @@ class Appointment(models.Model):
         return f"{self.title} - {self.patient.user.get_full_name()}"
 
 class AppointmentMessage(models.Model):
-    appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='messages')
-    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    appointment = models.ForeignKey(AppointmentRequest, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='appointment_messages')  # CHANGED THIS
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     
