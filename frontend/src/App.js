@@ -13,7 +13,7 @@ import Welcome from './pages/Welcome';
 import PatientList from './pages/PatientList';
 import PatientForm from './components/patients/PatientForm';
 import PatientDetail from './pages/PatientDetail';
-import Appointments from './pages/Appointments';
+import Appointments from './pages/AppointmentsDetail';
 import AppointmentForm from './components/appointments/AppointmentForm';
 import Unauthorized from './pages/Unauthorized';
 import PrivateRoute from './components/common/PrivateRoute';
@@ -60,6 +60,9 @@ function App() {
           <Route path="reports" element={<MedicalReports />} />
           <Route path="prescriptions" element={<Prescriptions />} />
           <Route path="lab-results" element={<LabResults />} />
+          <Route path="appointments" element={<Appointments />} />
+          <Route path="appointments/new" element={<AppointmentForm />} />
+          <Route path="appointments/:id" element={<AppointmentDetail />} />
         </Route>
       </Routes>
     </Router>
