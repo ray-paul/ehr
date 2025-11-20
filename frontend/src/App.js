@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import MedicalReports from './pages/MedicalReports';
 import Layout from './components/common/Layout';
 import Login from './components/auth/Login';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 import Register from './components/auth/Register';
 import Prescriptions from './pages/Prescriptions';
 import LabResults from './pages/LabResults';
@@ -65,6 +67,8 @@ function App() {
           <Route path="reports" element={<MedicalReports />} />
           <Route path="prescriptions" element={<Prescriptions />} />
           <Route path="lab-results" element={<LabResults />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </Router>

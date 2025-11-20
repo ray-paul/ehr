@@ -1,8 +1,5 @@
 import api from './api';
 
-const TOKEN_KEY = 'token';
-const USER_KEY = 'user';
-
 export const authService = {
   login: async (username, password) => {
     const response = await api.post('/auth/login/', { username, password });
@@ -13,8 +10,17 @@ export const authService = {
     return response.data;
   },
 
-  register: async (userData) => {
-    const response = await api.post('/auth/register/', userData);
+  registerStaff: async (userData) => {
+    const response = await api.post('/auth/register/staff/', userData);
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+    }
+    return response.data;
+  },
+
+  registerPatient: async (userData) => {
+    const response = await api.post('/auth/register/patient/', userData);
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -33,5 +39,28 @@ export const authService = {
 
   getToken: () => {
     return localStorage.getItem('token');
+  },
+
+  isAuthenticated: () => {
+    return !!localStorage.getItem('token');
+  },
+
+  // Check if user has specific role
+  hasRole: (role) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user?.user_type === role;
+  },
+
+  // Check if user is medical staff
+  isMedicalStaff: () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const staffRoles = ['doctor', 'nurse', 'pharmacist', 'radiologist', 'labscientist', 'admin'];
+    return staffRoles.includes(user?.user_type);
+  },
+
+  // Check if user is verified
+  isVerified: () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user?.is_verified || false;
   }
 };
