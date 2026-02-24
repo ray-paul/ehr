@@ -1,13 +1,14 @@
 // frontend/src/services/appointments.js
 import api from './api';
 
-const endpoint = '/appointments/appointments/';
+const endpoint = '/appointments_app/appointments/';
 
 export const appointmentsService = {
-  // Basic CRUD operations
-  list: async () => {
+  // Basic CRUD
+  list: async (filters = {}) => {
     try {
-      const res = await api.get(endpoint);
+      const params = new URLSearchParams(filters).toString();
+      const res = await api.get(`${endpoint}?${params}`);
       return res.data;
     } catch (error) {
       console.error('Error fetching appointments:', error);
@@ -37,7 +38,7 @@ export const appointmentsService = {
 
   update: async (id, payload) => {
     try {
-      const res = await api.put(`${endpoint}${id}/`, payload);
+      const res = await api.patch(`${endpoint}${id}/`, payload);
       return res.data;
     } catch (error) {
       console.error('Error updating appointment:', error);
@@ -45,7 +46,7 @@ export const appointmentsService = {
     }
   },
 
-  remove: async (id) => {
+  delete: async (id) => {
     try {
       const res = await api.delete(`${endpoint}${id}/`);
       return res.data;
@@ -55,11 +56,12 @@ export const appointmentsService = {
     }
   },
 
-  // Appointment negotiation features
-  proposeTime: async (id, proposedDate) => {
+  // Appointment actions
+  proposeTime: async (id, proposedDate, message = '') => {
     try {
-      const res = await api.post(`${endpoint}${id}/propose_time/`, { 
-        proposed_date: proposedDate 
+      const res = await api.post(`${endpoint}${id}/propose_time/`, {
+        proposed_date: proposedDate,
+        message
       });
       return res.data;
     } catch (error) {
@@ -68,9 +70,11 @@ export const appointmentsService = {
     }
   },
 
-  confirm: async (id, confirmedDate = null) => {
+  confirm: async (id, confirmedDate = null, message = '') => {
     try {
-      const payload = confirmedDate ? { confirmed_date: confirmedDate } : {};
+      const payload = { message };
+      if (confirmedDate) payload.confirmed_date = confirmedDate;
+      
       const res = await api.post(`${endpoint}${id}/confirm/`, payload);
       return res.data;
     } catch (error) {
@@ -79,12 +83,43 @@ export const appointmentsService = {
     }
   },
 
-  // Message management
+  cancel: async (id, reason) => {
+    try {
+      const res = await api.post(`${endpoint}${id}/cancel/`, { reason });
+      return res.data;
+    } catch (error) {
+      console.error('Error cancelling appointment:', error);
+      throw error;
+    }
+  },
+
+  complete: async (id) => {
+    try {
+      const res = await api.post(`${endpoint}${id}/complete/`);
+      return res.data;
+    } catch (error) {
+      console.error('Error completing appointment:', error);
+      throw error;
+    }
+  },
+
+  reschedule: async (id, newDate, reason = '') => {
+    try {
+      const res = await api.post(`${endpoint}${id}/reschedule/`, {
+        new_date: newDate,
+        reason
+      });
+      return res.data;
+    } catch (error) {
+      console.error('Error rescheduling appointment:', error);
+      throw error;
+    }
+  },
+
+  // Messaging
   addMessage: async (id, message) => {
     try {
-      const res = await api.post(`${endpoint}${id}/add_message/`, { 
-        message: message 
-      });
+      const res = await api.post(`${endpoint}${id}/add_message/`, { message });
       return res.data;
     } catch (error) {
       console.error('Error adding message:', error);
@@ -94,7 +129,7 @@ export const appointmentsService = {
 
   getMessages: async (id) => {
     try {
-      const res = await api.get(`/appointments/appointments/${id}/messages/`);
+      const res = await api.get(`${endpoint}${id}/messages/`);
       return res.data;
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -102,95 +137,63 @@ export const appointmentsService = {
     }
   },
 
-  // Status management
-  cancel: async (id) => {
+  // Feedback
+  submitFeedback: async (id, rating, feedback = '') => {
     try {
-      const res = await api.post(`${endpoint}${id}/cancel/`);
+      const res = await api.post(`${endpoint}${id}/feedback/`, { rating, feedback });
       return res.data;
     } catch (error) {
-      console.error('Error cancelling appointment:', error);
+      console.error('Error submitting feedback:', error);
       throw error;
     }
   },
 
-  // Provider-specific operations
-  getProviderAppointments: async (providerId) => {
+  // Special queries
+  getUpcoming: async () => {
     try {
-      const res = await api.get(`${endpoint}?provider=${providerId}`);
+      const res = await api.get(`${endpoint}upcoming/`);
       return res.data;
     } catch (error) {
-      console.error('Error fetching provider appointments:', error);
+      console.error('Error fetching upcoming appointments:', error);
       throw error;
     }
   },
 
-  getPatientAppointments: async (patientId) => {
+  getToday: async () => {
     try {
-      const res = await api.get(`${endpoint}?patient=${patientId}`);
+      const res = await api.get(`${endpoint}today/`);
       return res.data;
     } catch (error) {
-      console.error('Error fetching patient appointments:', error);
+      console.error('Error fetching today\'s appointments:', error);
       throw error;
     }
   },
 
   // Utility functions
-  getStatusColor: (status) => {
-    const statusColors = {
-      'requested': 'warning',
-      'proposed': 'info', 
-      'confirmed': 'success',
-      'cancelled': 'danger',
-      'completed': 'secondary'
+  getStatusBadge: (status) => {
+    const badges = {
+      'requested': { color: 'bg-yellow-100 text-yellow-800', label: 'Requested', icon: '⏳' },
+      'proposed': { color: 'bg-blue-100 text-blue-800', label: 'Proposed', icon: '🔄' },
+      'confirmed': { color: 'bg-green-100 text-green-800', label: 'Confirmed', icon: '✅' },
+      'cancelled': { color: 'bg-red-100 text-red-800', label: 'Cancelled', icon: '❌' },
+      'completed': { color: 'bg-gray-100 text-gray-800', label: 'Completed', icon: '✓' },
+      'no_show': { color: 'bg-orange-100 text-orange-800', label: 'No Show', icon: '⚠️' },
+      'rescheduled': { color: 'bg-purple-100 text-purple-800', label: 'Rescheduled', icon: '↻' }
     };
-    return statusColors[status] || 'secondary';
+    return badges[status] || badges.requested;
   },
 
-  getStatusText: (status) => {
-    const statusTexts = {
-      'requested': 'Requested',
-      'proposed': 'Counter Proposed', 
-      'confirmed': 'Confirmed',
-      'cancelled': 'Cancelled',
-      'completed': 'Completed'
+  getAppointmentTypeIcon: (type) => {
+    const icons = {
+      'checkup': '🏥',
+      'followup': '🔄',
+      'emergency': '🚨',
+      'consultation': '👨‍⚕️',
+      'procedure': '🔧',
+      'vaccination': '💉',
+      'lab_test': '🔬',
+      'imaging': '📷'
     };
-    return statusTexts[status] || status;
-  },
-
-  // Fallback data for development
-  getFallbackData: () => {
-    return [
-      { 
-        id: 1, 
-        title: 'General Checkup', 
-        patient_name: 'John Doe', 
-        provider_name: 'Dr. Smith',
-        status: 'requested',
-        patient_suggested_date: '2025-11-20T10:00:00Z',
-        created_at: '2025-11-18T09:00:00Z'
-      },
-      { 
-        id: 2, 
-        title: 'Follow-up Consultation', 
-        patient_name: 'Jane Smith', 
-        provider_name: 'Dr. Johnson',
-        status: 'proposed',
-        patient_suggested_date: '2025-11-19T14:00:00Z',
-        provider_proposed_date: '2025-11-19T15:00:00Z',
-        created_at: '2025-11-17T16:00:00Z'
-      },
-      { 
-        id: 3, 
-        title: 'Annual Physical', 
-        patient_name: 'Bob Wilson', 
-        provider_name: 'Dr. Brown',
-        status: 'confirmed',
-        patient_suggested_date: '2025-11-22T09:00:00Z',
-        confirmed_date: '2025-11-22T09:00:00Z',
-        created_at: '2025-11-16T11:00:00Z'
-      }
-    ];
+    return icons[type] || '📅';
   }
 };
-
-export default appointmentsService;

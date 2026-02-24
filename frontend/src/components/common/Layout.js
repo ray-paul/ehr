@@ -1,19 +1,23 @@
 // frontend/src/components/common/Layout.js
 import React from 'react';
-import { Outlet } from 'react-router-dom';
-import Header from '../Header';  
-import Footer from '../Footer';  
+import { Outlet, useLocation } from 'react-router-dom';
+import Header from './Header';
+import Footer from './Footer';
 
 const Layout = () => {
+  const location = useLocation();
+  
+  // Check if current path is the home page
+  const isHomePage = location.pathname === '/';
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        <div className="container mx-auto px-4 py-6">
-          <Outlet />
-        </div>
+        <Outlet />
       </main>
-      <Footer />
+      {/* Only show footer on home page */}
+      {isHomePage && <Footer />}
     </div>
   );
 };

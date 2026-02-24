@@ -1,7 +1,6 @@
+// frontend/src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-// Remove Bootstrap if you're fully using Tailwind, or keep it for compatibility
-//import 'bootstrap/dist/css/bootstrap.min.css';
 import MedicalReports from './pages/MedicalReports';
 import Layout from './components/common/Layout';
 import Login from './components/auth/Login';
@@ -21,12 +20,18 @@ import AppointmentForm from './components/appointments/AppointmentForm';
 import Unauthorized from './pages/Unauthorized';
 import PrivateRoute from './components/common/PrivateRoute';
 import { authService } from './services/auth';
+import AdminUsers from './pages/admin/AdminUsers';
 
 function App() {
   const currentUser = authService.getCurrentUser();
 
   return (
-    <Router>
+    <Router
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       <Routes>
         {/* Public routes - no header/footer */}
         <Route path="/welcome" element={<Welcome />} />
@@ -45,19 +50,28 @@ function App() {
           <Route
             path="patients/new"
             element={
-              <PrivateRoute roles={['doctor', 'admin']}>
+              <PrivateRoute roles={['doctor', 'admin', 'master_admin']}>
                 <PatientForm />
               </PrivateRoute>
             }
           />
           <Route path="patients/:id" element={<PatientDetail />} />
+          {/* ADD THIS LINE - Edit patient route */}
+          <Route
+            path="patients/:id/edit"
+            element={
+              <PrivateRoute roles={['doctor', 'admin', 'master_admin']}>
+                <PatientForm />
+              </PrivateRoute>
+            }
+          />
           
-          {/* Appointments routes - FIXED: Removed duplicates */}
+          {/* Appointments routes */}
           <Route path="appointments" element={<Appointments />} />
           <Route
             path="appointments/new"
             element={
-              <PrivateRoute roles={['doctor', 'admin']}>
+              <PrivateRoute roles={['doctor', 'admin', 'master_admin', 'patient']}>
                 <AppointmentForm />
               </PrivateRoute>
             }
@@ -69,6 +83,9 @@ function App() {
           <Route path="lab-results" element={<LabResults />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
+          
+          {/* Admin routes */}
+          <Route path="admin/users" element={<AdminUsers />} />
         </Route>
       </Routes>
     </Router>

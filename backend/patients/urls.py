@@ -6,8 +6,10 @@ from . import views
 router = DefaultRouter()
 router.register(r'patients', views.PatientViewSet)
 router.register(r'clinical-notes', views.ClinicalNoteViewSet)
+router.register(r'allergies', views.AllergyViewSet)
+router.register(r'medications', views.MedicationViewSet)
+router.register(r'appointments', views.AppointmentViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-     path('patients/<int:pk>/', views.PatientDetailView.as_view(), name='patient-detail'),
 ]

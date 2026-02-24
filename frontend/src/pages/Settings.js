@@ -8,6 +8,8 @@ const Settings = () => {
   const [message, setMessage] = useState({ text: '', type: '' });
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedUser, setEditedUser] = useState({});
   
   const [passwordData, setPasswordData] = useState({
     current_password: '',
@@ -20,13 +22,51 @@ const Settings = () => {
     appointmentReminders: true,
     labResults: true,
     emergencyAlerts: false,
-    prescriptionUpdates: true
+    prescriptionUpdates: true,
+    marketingEmails: false,
+    securityAlerts: true
   });
 
+  const [privacySettings, setPrivacySettings] = useState({
+    shareAnonymizedData: false,
+    twoFactorAuth: false,
+    sessionTimeout: '30',
+    dataRetention: '1year',
+    allowDataProcessing: true
+  });
+
+  const [exportLoading, setExportLoading] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+
   useEffect(() => {
-    const currentUser = authService.getCurrentUser();
-    setUser(currentUser);
+    fetchUserSettings();
   }, []);
+
+  const fetchUserSettings = async () => {
+    try {
+      const currentUser = authService.getCurrentUser();
+      setUser(currentUser);
+      setEditedUser(currentUser || {});
+      
+      // Fetch notification settings from backend
+      try {
+        const response = await api.get('/accounts/notification-settings/');
+        setNotificationSettings(response.data);
+      } catch (error) {
+        console.log('Using default notification settings');
+      }
+      
+      // Fetch privacy settings from backend
+      try {
+        const response = await api.get('/accounts/privacy-settings/');
+        setPrivacySettings(response.data);
+      } catch (error) {
+        console.log('Using default privacy settings');
+      }
+    } catch (error) {
+      showMessage('Error loading settings', 'error');
+    }
+  };
 
   const showMessage = (text, type = 'success') => {
     setMessage({ text, type });
@@ -62,10 +102,93 @@ const Settings = () => {
     }
   };
 
-  const handleNotificationChange = (setting, value) => {
+  const handleNotificationChange = async (setting, value) => {
     const updatedSettings = { ...notificationSettings, [setting]: value };
     setNotificationSettings(updatedSettings);
-    showMessage('Notification settings updated');
+    
+    try {
+      await api.post('/accounts/notification-settings/', updatedSettings);
+      showMessage('Notification settings updated');
+    } catch (error) {
+      showMessage('Error saving notification settings', 'error');
+    }
+  };
+
+  const handlePrivacyChange = async (setting, value) => {
+    const updatedSettings = { ...privacySettings, [setting]: value };
+    setPrivacySettings(updatedSettings);
+    
+    try {
+      await api.post('/accounts/privacy-settings/', updatedSettings);
+      showMessage('Privacy settings updated');
+    } catch (error) {
+      showMessage('Error saving privacy settings', 'error');
+    }
+  };
+
+  const handleProfileUpdate = async () => {
+    setLoading(true);
+    try {
+      const response = await api.put(`/accounts/user/${user.id}/`, editedUser);
+      setUser(response.data);
+      authService.updateUser(response.data);
+      setIsEditing(false);
+      showMessage('Profile updated successfully!');
+    } catch (error) {
+      showMessage('Error updating profile', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDataExport = async () => {
+    setExportLoading(true);
+    try {
+      const response = await api.get('/accounts/export-data/', { responseType: 'blob' });
+      
+      // Create download link
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `user-data-${new Date().toISOString()}.json`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      
+      showMessage('Data export started. Your download will begin shortly.');
+    } catch (error) {
+      showMessage('Error exporting data', 'error');
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  const handleAccountDeletion = async () => {
+    if (!deleteConfirm) {
+      setDeleteConfirm(true);
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      await api.delete('/accounts/delete-account/');
+      authService.logout();
+      window.location.href = '/login';
+    } catch (error) {
+      showMessage('Error deleting account', 'error');
+      setDeleteConfirm(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTwoFactorSetup = async () => {
+    try {
+      const response = await api.post('/accounts/setup-2fa/');
+      showMessage('2FA setup initiated. Check your email for instructions.');
+    } catch (error) {
+      showMessage('Error setting up 2FA', 'error');
+    }
   };
 
   const tabs = [
@@ -210,72 +333,144 @@ const Settings = () => {
             {/* Account Settings */}
             {activeTab === 'account' && (
               <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-                <div className="flex items-center mb-6">
-                  <span className="text-2xl mr-3">👤</span>
-                  <h3 className="text-2xl font-bold text-gray-900">Account Information</h3>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center">
+                    <span className="text-2xl mr-3">👤</span>
+                    <h3 className="text-2xl font-bold text-gray-900">Account Information</h3>
+                  </div>
+                  {!isEditing ? (
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
+                    >
+                      Edit Profile
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="bg-gray-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-600 transition-colors duration-200"
+                    >
+                      Cancel
+                    </button>
+                  )}
                 </div>
                 
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-6">
-                    <div>
-                      <h4 className="text-lg font-semibold text-gray-900 mb-4">Personal Details</h4>
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                          <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
-                            <p className="text-gray-900">{user?.first_name || 'Not'} {user?.last_name || 'Set'}</p>
+                {!isEditing ? (
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900 mb-4">Personal Details</h4>
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                              <p className="text-gray-900">{user?.first_name || 'Not'} {user?.last_name || 'Set'}</p>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                              <p className="text-gray-900">{user?.email || 'Not set'}</p>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                            <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                              <p className="text-gray-900">{user?.username || 'Not set'}</p>
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                          <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
-                            <p className="text-gray-900">{user?.email || 'Not set'}</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-6">
+                      <div>
+                        <h4 className="text-lg font-semibold text-gray-900 mb-4">Professional Information</h4>
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">User Role</label>
+                            <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                              <p className="text-gray-900 capitalize">{user?.user_type || 'Not set'}</p>
+                            </div>
                           </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                          <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
-                            <p className="text-gray-900">{user?.username || 'Not set'}</p>
-                          </div>
+                          {user?.work_id && (
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Work ID</label>
+                              <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                                <p className="text-gray-900">{user.work_id}</p>
+                              </div>
+                            </div>
+                          )}
+                          {user?.specialization && (
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">Specialization</label>
+                              <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
+                                <p className="text-gray-900">{user.specialization}</p>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
-
+                ) : (
                   <div className="space-y-6">
-                    <div>
-                      <h4 className="text-lg font-semibold text-gray-900 mb-4">Professional Information</h4>
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">User Role</label>
-                          <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
-                            <p className="text-gray-900 capitalize">{user?.user_type || 'Not set'}</p>
-                          </div>
-                        </div>
-                        {user?.work_id && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Work ID</label>
-                            <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
-                              <p className="text-gray-900">{user.work_id}</p>
-                            </div>
-                          </div>
-                        )}
-                        {user?.specialization && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Specialization</label>
-                            <div className="px-4 py-3 bg-gray-50 rounded-lg border border-gray-200">
-                              <p className="text-gray-900">{user.specialization}</p>
-                            </div>
-                          </div>
-                        )}
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                        <input
+                          type="text"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                          value={editedUser.first_name || ''}
+                          onChange={(e) => setEditedUser({ ...editedUser, first_name: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                        <input
+                          type="text"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                          value={editedUser.last_name || ''}
+                          onChange={(e) => setEditedUser({ ...editedUser, last_name: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input
+                          type="email"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                          value={editedUser.email || ''}
+                          onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                        <input
+                          type="tel"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                          value={editedUser.phone || ''}
+                          onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })}
+                        />
                       </div>
                     </div>
-
-                    <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                      Edit Profile Information
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                      <textarea
+                        rows="3"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                        value={editedUser.address || ''}
+                        onChange={(e) => setEditedUser({ ...editedUser, address: e.target.value })}
+                      />
+                    </div>
+                    <button
+                      onClick={handleProfileUpdate}
+                      disabled={loading}
+                      className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50"
+                    >
+                      {loading ? 'Saving...' : 'Save Changes'}
                     </button>
                   </div>
-                </div>
+                )}
               </div>
             )}
 
@@ -287,101 +482,128 @@ const Settings = () => {
                   <h3 className="text-2xl font-bold text-gray-900">Security Settings</h3>
                 </div>
 
-                <form onSubmit={handlePasswordSubmit} className="space-y-6">
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Change Password</h4>
-                    <div className="space-y-4">
-                      <div>
-                        <label htmlFor="current_password" className="block text-sm font-medium text-gray-700 mb-2">
-                          Current Password
-                        </label>
-                        <input
-                          type="password"
-                          id="current_password"
-                          name="current_password"
-                          value={passwordData.current_password}
-                          onChange={handlePasswordChange}
-                          required
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
-                          placeholder="Enter current password"
-                          disabled={loading}
-                        />
-                      </div>
+                <form onSubmit={handlePasswordSubmit} className="space-y-6 mb-8 pb-8 border-b border-gray-200">
+                  <h4 className="text-lg font-semibold text-gray-900">Change Password</h4>
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="current_password" className="block text-sm font-medium text-gray-700 mb-2">
+                        Current Password
+                      </label>
+                      <input
+                        type="password"
+                        id="current_password"
+                        name="current_password"
+                        value={passwordData.current_password}
+                        onChange={handlePasswordChange}
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                        placeholder="Enter current password"
+                      />
+                    </div>
 
-                      <div>
-                        <label htmlFor="new_password" className="block text-sm font-medium text-gray-700 mb-2">
-                          New Password
-                        </label>
-                        <input
-                          type="password"
-                          id="new_password"
-                          name="new_password"
-                          value={passwordData.new_password}
-                          onChange={handlePasswordChange}
-                          required
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
-                          placeholder="Enter new password"
-                          disabled={loading}
-                        />
-                        {passwordData.new_password && (
-                          <div className="mt-2">
-                            <div className="flex justify-between items-center mb-1">
-                              <span className="text-sm text-gray-600">Password strength</span>
-                              <span className={`text-sm font-medium ${passwordStrength.color}`}>
-                                {passwordStrength.label}
-                              </span>
-                            </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div 
-                                className={`h-2 rounded-full transition-all duration-300 ${
-                                  passwordStrength.strength === 0 ? 'bg-red-500 w-1/4' :
-                                  passwordStrength.strength === 1 ? 'bg-orange-500 w-2/4' :
-                                  passwordStrength.strength === 2 ? 'bg-yellow-500 w-3/4' :
-                                  passwordStrength.strength >= 3 ? 'bg-green-500 w-full' : ''
-                                }`}
-                              ></div>
-                            </div>
+                    <div>
+                      <label htmlFor="new_password" className="block text-sm font-medium text-gray-700 mb-2">
+                        New Password
+                      </label>
+                      <input
+                        type="password"
+                        id="new_password"
+                        name="new_password"
+                        value={passwordData.new_password}
+                        onChange={handlePasswordChange}
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                        placeholder="Enter new password"
+                      />
+                      {passwordData.new_password && (
+                        <div className="mt-2">
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-sm text-gray-600">Password strength</span>
+                            <span className={`text-sm font-medium ${passwordStrength.color}`}>
+                              {passwordStrength.label}
+                            </span>
                           </div>
-                        )}
-                      </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className={`h-2 rounded-full transition-all duration-300 ${
+                              passwordStrength.strength === 0 ? 'bg-red-500 w-1/4' :
+                              passwordStrength.strength === 1 ? 'bg-orange-500 w-2/4' :
+                              passwordStrength.strength === 2 ? 'bg-yellow-500 w-3/4' :
+                              'bg-green-500 w-full'
+                            }`} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
 
-                      <div>
-                        <label htmlFor="confirm_password" className="block text-sm font-medium text-gray-700 mb-2">
-                          Confirm New Password
-                        </label>
-                        <input
-                          type="password"
-                          id="confirm_password"
-                          name="confirm_password"
-                          value={passwordData.confirm_password}
-                          onChange={handlePasswordChange}
-                          required
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
-                          placeholder="Confirm new password"
-                          disabled={loading}
-                        />
-                      </div>
+                    <div>
+                      <label htmlFor="confirm_password" className="block text-sm font-medium text-gray-700 mb-2">
+                        Confirm New Password
+                      </label>
+                      <input
+                        type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        value={passwordData.confirm_password}
+                        onChange={handlePasswordChange}
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                        placeholder="Confirm new password"
+                      />
                     </div>
                   </div>
 
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50"
                   >
-                    {loading ? (
-                      <div className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Updating Password...
-                      </div>
-                    ) : (
-                      'Update Password'
-                    )}
+                    {loading ? 'Updating...' : 'Update Password'}
                   </button>
                 </form>
+
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Two-Factor Authentication</h4>
+                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      <div>
+                        <p className="font-medium text-gray-900">2FA Status</p>
+                        <p className="text-sm text-gray-600 mt-1">
+                          {privacySettings.twoFactorAuth ? 'Enabled' : 'Disabled'}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handlePrivacyChange('twoFactorAuth', !privacySettings.twoFactorAuth)}
+                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                          privacySettings.twoFactorAuth ? 'bg-blue-600' : 'bg-gray-200'
+                        }`}
+                      >
+                        <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          privacySettings.twoFactorAuth ? 'translate-x-5' : 'translate-x-0'
+                        }`} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Session Settings</h4>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Session Timeout</label>
+                        <select
+                          value={privacySettings.sessionTimeout}
+                          onChange={(e) => handlePrivacyChange('sessionTimeout', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                          <option value="15">15 minutes</option>
+                          <option value="30">30 minutes</option>
+                          <option value="60">1 hour</option>
+                          <option value="120">2 hours</option>
+                          <option value="240">4 hours</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -394,39 +616,36 @@ const Settings = () => {
                 </div>
 
                 <div className="space-y-6">
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Email Notifications</h4>
-                    <div className="space-y-4">
-                      {Object.entries(notificationSettings).map(([key, value]) => (
-                        <div key={key} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
-                          <div>
-                            <p className="font-medium text-gray-900">
-                              {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                            </p>
-                            <p className="text-sm text-gray-600 mt-1">
-                              {key === 'emailNotifications' && 'Receive general email notifications'}
-                              {key === 'appointmentReminders' && 'Get reminded about upcoming appointments'}
-                              {key === 'labResults' && 'Notify when lab results are available'}
-                              {key === 'emergencyAlerts' && 'Receive emergency patient alerts'}
-                              {key === 'prescriptionUpdates' && 'Updates about prescription status'}
-                            </p>
-                          </div>
-                          <button
-                            onClick={() => handleNotificationChange(key, !value)}
-                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                              value ? 'bg-blue-600' : 'bg-gray-200'
-                            }`}
-                          >
-                            <span
-                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                value ? 'translate-x-5' : 'translate-x-0'
-                              }`}
-                            />
-                          </button>
-                        </div>
-                      ))}
+                  {Object.entries(notificationSettings).map(([key, value]) => (
+                    <div key={key} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors duration-200">
+                      <div>
+                        <p className="font-medium text-gray-900">
+                          {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                        </p>
+                        <p className="text-sm text-gray-600 mt-1">
+                          {key === 'emailNotifications' && 'Receive general email notifications'}
+                          {key === 'appointmentReminders' && 'Get reminded about upcoming appointments'}
+                          {key === 'labResults' && 'Notify when lab results are available'}
+                          {key === 'emergencyAlerts' && 'Receive emergency patient alerts'}
+                          {key === 'prescriptionUpdates' && 'Updates about prescription status'}
+                          {key === 'marketingEmails' && 'Receive marketing and promotional emails'}
+                          {key === 'securityAlerts' && 'Get alerts about security events'}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleNotificationChange(key, !value)}
+                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                          value ? 'bg-blue-600' : 'bg-gray-200'
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            value ? 'translate-x-5' : 'translate-x-0'
+                          }`}
+                        />
+                      </button>
                     </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -445,19 +664,95 @@ const Settings = () => {
                     <p className="text-blue-700 mb-4">
                       Download a copy of all your personal data stored in the system.
                     </p>
-                    <button className="bg-white text-blue-600 py-2 px-4 rounded-lg font-medium hover:bg-blue-50 border border-blue-200 transition-colors duration-200">
-                      Export My Data
+                    <button
+                      onClick={handleDataExport}
+                      disabled={exportLoading}
+                      className="bg-white text-blue-600 py-2 px-4 rounded-lg font-medium hover:bg-blue-50 border border-blue-200 transition-colors duration-200 disabled:opacity-50"
+                    >
+                      {exportLoading ? 'Exporting...' : 'Export My Data'}
                     </button>
                   </div>
 
                   <div className="p-6 bg-red-50 rounded-xl border border-red-200">
                     <h4 className="text-lg font-semibold text-red-900 mb-2">Account Deletion</h4>
                     <p className="text-red-700 mb-4">
-                      Permanently delete your account and all associated data. This action cannot be undone.
+                      {deleteConfirm 
+                        ? 'Are you absolutely sure? This action cannot be undone.' 
+                        : 'Permanently delete your account and all associated data. This action cannot be undone.'}
                     </p>
-                    <button className="bg-white text-red-600 py-2 px-4 rounded-lg font-medium hover:bg-red-50 border border-red-200 transition-colors duration-200">
-                      Request Account Deletion
+                    <button
+                      onClick={handleAccountDeletion}
+                      disabled={loading}
+                      className={`py-2 px-4 rounded-lg font-medium border transition-colors duration-200 ${
+                        deleteConfirm
+                          ? 'bg-red-600 text-white hover:bg-red-700 border-red-700'
+                          : 'bg-white text-red-600 hover:bg-red-50 border-red-200'
+                      } disabled:opacity-50`}
+                    >
+                      {deleteConfirm ? 'Confirm Deletion' : 'Request Account Deletion'}
                     </button>
+                    {deleteConfirm && (
+                      <button
+                        onClick={() => setDeleteConfirm(false)}
+                        className="ml-3 py-2 px-4 rounded-lg font-medium bg-gray-500 text-white hover:bg-gray-600 transition-colors duration-200"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Data Sharing Preferences</h4>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-gray-900">Share Anonymized Data</p>
+                          <p className="text-sm text-gray-600">Help improve healthcare by sharing anonymized data for research</p>
+                        </div>
+                        <button
+                          onClick={() => handlePrivacyChange('shareAnonymizedData', !privacySettings.shareAnonymizedData)}
+                          className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                            privacySettings.shareAnonymizedData ? 'bg-blue-600' : 'bg-gray-200'
+                          }`}
+                        >
+                          <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            privacySettings.shareAnonymizedData ? 'translate-x-5' : 'translate-x-0'
+                          }`} />
+                        </button>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-gray-900">Allow Data Processing</p>
+                          <p className="text-sm text-gray-600">Allow processing of your data for healthcare operations</p>
+                        </div>
+                        <button
+                          onClick={() => handlePrivacyChange('allowDataProcessing', !privacySettings.allowDataProcessing)}
+                          className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                            privacySettings.allowDataProcessing ? 'bg-blue-600' : 'bg-gray-200'
+                          }`}
+                        >
+                          <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            privacySettings.allowDataProcessing ? 'translate-x-5' : 'translate-x-0'
+                          }`} />
+                        </button>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Data Retention Period</label>
+                        <select
+                          value={privacySettings.dataRetention}
+                          onChange={(e) => handlePrivacyChange('dataRetention', e.target.value)}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                          <option value="6months">6 months</option>
+                          <option value="1year">1 year</option>
+                          <option value="2years">2 years</option>
+                          <option value="5years">5 years</option>
+                          <option value="indefinite">Indefinite</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

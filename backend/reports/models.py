@@ -1,18 +1,16 @@
+# backend/reports/models.py
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
 from patients.models import Patient
-# REMOVE duplicate import: from django.conf import settings
-# REMOVE: from django.contrib.auth import get_user_model  # Not needed
-
 
 class Report(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True)
     # Associate report with a Patient (nullable to ease migrations)
     patient = models.ForeignKey('patients.Patient', on_delete=models.CASCADE, null=True, blank=True, related_name='reports')
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports_created')  # ADDED related_name
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports_created')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -31,7 +29,7 @@ class ReportAttachment(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='attachments')
     file = models.FileField(upload_to='report_attachments/')
     attachment_type = models.CharField(max_length=32, choices=ATTACHMENT_TYPES)
-    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='report_attachments_uploaded')  # ADDED related_name
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='report_attachments_uploaded')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -46,7 +44,7 @@ class Prescription(models.Model):
         ('expired', 'Expired'),
     ]
     
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='reports_prescriptions')
     drug_name = models.CharField(max_length=200)
     dosage = models.CharField(max_length=100)
     frequency = models.CharField(max_length=100)
@@ -54,7 +52,7 @@ class Prescription(models.Model):
     instructions = models.TextField(blank=True)
     refills = models.IntegerField(default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='prescriptions_created')  # FIXED: Changed User to settings.AUTH_USER_MODEL
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reports_prescriptions_created')
     created_at = models.DateTimeField(auto_now_add=True)
     expiry_date = models.DateField()
     

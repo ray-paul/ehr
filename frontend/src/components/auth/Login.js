@@ -106,6 +106,7 @@ const Login = () => {
                 value={formData.username}
                 onChange={handleChange}
                 required
+                autoComplete="username"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
                 placeholder="Enter your username"
                 disabled={loading}
@@ -124,6 +125,7 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                autoComplete="current-password"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400"
                 placeholder="Enter your password"
                 disabled={loading}

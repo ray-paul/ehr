@@ -1,107 +1,181 @@
 // frontend/src/components/appointments/AppointmentForm.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { appointmentsService } from '../../services/appointments';
+import { authService } from '../../services/auth';
 import api from '../../services/api';
 
 const AppointmentForm = () => {
-  const [form, setForm] = useState({ 
-    title: '', 
-    description: '',
-    patient_suggested_date: '', 
-    provider: '' 
-  });
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const currentUser = authService.getCurrentUser();
+  
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
   const [providers, setProviders] = useState([]);
   const [patients, setPatients] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [loadingProviders, setLoadingProviders] = useState(false);
+  const [loadingPatients, setLoadingPatients] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    reason: '',
+    patient_suggested_date: '',
+    provider: '',
+    patient: '',
+    duration: 30,
+    location: '',
+    is_virtual: false,
+    appointment_type: 'checkup'
+  });
+
+  const isEdit = !!id;
+  const isPatient = currentUser?.user_type === 'patient';
+  const isStaff = ['doctor', 'nurse', 'admin', 'master_admin'].includes(currentUser?.user_type);
+
+  // Appointment types
+  const appointmentTypes = [
+    { value: 'checkup', label: 'General Checkup', icon: '🏥' },
+    { value: 'followup', label: 'Follow-up Visit', icon: '🔄' },
+    { value: 'emergency', label: 'Emergency', icon: '🚨' },
+    { value: 'consultation', label: 'Consultation', icon: '👨‍⚕️' },
+    { value: 'procedure', label: 'Procedure', icon: '🔧' },
+    { value: 'vaccination', label: 'Vaccination', icon: '💉' },
+    { value: 'lab_test', label: 'Lab Test', icon: '🔬' },
+    { value: 'imaging', label: 'Imaging/Radiology', icon: '📷' }
+  ];
 
   useEffect(() => {
     fetchProviders();
-    fetchPatients();
-  }, []);
+    if (isStaff) fetchPatients();
+    if (isEdit) fetchAppointment();
+  }, [id]);
 
   const fetchProviders = async () => {
+    setLoadingProviders(true);
     try {
-      // Fetch users with provider role - you'll need to create this endpoint
       const response = await api.get('/accounts/providers/');
       setProviders(response.data);
     } catch (error) {
       console.error('Error fetching providers:', error);
-      // Fallback providers for development
+      // Fallback data for development
       setProviders([
-        { id: 1, first_name: 'John', last_name: 'Smith', specialty: 'General Medicine' },
-        { id: 2, first_name: 'Sarah', last_name: 'Johnson', specialty: 'Cardiology' },
-        { id: 3, first_name: 'Michael', last_name: 'Brown', specialty: 'Pediatrics' }
+        { id: 1, first_name: 'John', last_name: 'Smith', specialization: 'Cardiology' },
+        { id: 2, first_name: 'Sarah', last_name: 'Johnson', specialization: 'Pediatrics' },
+        { id: 3, first_name: 'Michael', last_name: 'Brown', specialization: 'General Medicine' },
+        { id: 4, first_name: 'Emily', last_name: 'Davis', specialization: 'Dermatology' }
       ]);
+    } finally {
+      setLoadingProviders(false);
     }
   };
 
   const fetchPatients = async () => {
+    setLoadingPatients(true);
     try {
-      // Fetch patients - you'll need to create this endpoint
       const response = await api.get('/patients/patients/');
       setPatients(response.data);
     } catch (error) {
       console.error('Error fetching patients:', error);
-      // Fallback patients for development
-      setPatients([
-        { id: 1, first_name: 'Alice', last_name: 'Williams' },
-        { id: 2, first_name: 'David', last_name: 'Miller' },
-        { id: 3, first_name: 'Emma', last_name: 'Davis' }
-      ]);
+    } finally {
+      setLoadingPatients(false);
+    }
+  };
+
+  const fetchAppointment = async () => {
+    setLoading(true);
+    try {
+      const data = await appointmentsService.get(id);
+      setFormData({
+        title: data.title || '',
+        description: data.description || '',
+        reason: data.reason || '',
+        patient_suggested_date: data.patient_suggested_date ? data.patient_suggested_date.slice(0, 16) : '',
+        provider: data.provider || '',
+        patient: data.patient || '',
+        duration: data.duration || 30,
+        location: data.location || '',
+        is_virtual: data.is_virtual || false,
+        appointment_type: data.appointment_type || 'checkup'
+      });
+    } catch (error) {
+      setError('Error loading appointment details');
+      console.error('Error fetching appointment:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ 
-      ...prev, 
-      [name]: value 
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
     }));
+  };
+
+  const validateForm = () => {
+    if (!formData.title.trim()) {
+      setError('Appointment title is required');
+      return false;
+    }
+    if (!formData.patient_suggested_date) {
+      setError('Please select a preferred date and time');
+      return false;
+    }
+    if (!formData.provider && isStaff) {
+      setError('Please select a healthcare provider');
+      return false;
+    }
+    if (isStaff && !formData.patient && !isEdit) {
+      setError('Please select a patient');
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setSubmitting(true);
     setError('');
 
-    // Validation
-    if (!form.title.trim()) {
-      setError('Title is required');
-      setLoading(false);
-      return;
-    }
-
-    if (!form.patient_suggested_date) {
-      setError('Please select a preferred date and time');
-      setLoading(false);
-      return;
-    }
-
-    if (!form.provider) {
-      setError('Please select a provider');
-      setLoading(false);
+    if (!validateForm()) {
+      setSubmitting(false);
       return;
     }
 
     try {
-      // Format the data for the backend
-      const payload = {
-        title: form.title,
-        description: form.description,
-        patient_suggested_date: form.patient_suggested_date,
-        provider: form.provider
+      const submitData = {
+        ...formData,
+        patient: isPatient ? currentUser?.patient_id : formData.patient,
+        // Ensure dates are in correct format
+        patient_suggested_date: new Date(formData.patient_suggested_date).toISOString()
       };
 
-      await appointmentsService.create(payload);
-      navigate('/appointments');
-    } catch (err) {
-      console.error('Appointment creation error:', err);
-      setError(err.response?.data?.message || 'Failed to create appointment. Please try again.');
+      if (isEdit) {
+        await appointmentsService.update(id, submitData);
+        navigate('/appointments', { 
+          state: { 
+            success: true,
+            message: 'Appointment updated successfully!'
+          }
+        });
+      } else {
+        await appointmentsService.create(submitData);
+        navigate('/appointments', { 
+          state: { 
+            success: true,
+            message: 'Appointment requested successfully!'
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error saving appointment:', error);
+      setError(error.response?.data?.message || error.response?.data?.error || 'Failed to save appointment. Please try again.');
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -111,165 +185,302 @@ const AppointmentForm = () => {
     return now.toISOString().slice(0, 16);
   };
 
-  return (
-    <div className="container mt-4">
-      <div className="row justify-content-center">
-        <div className="col-md-8">
-          <div className="card">
-            <div className="card-header">
-              <h2 className="card-title mb-0">Request New Appointment</h2>
-            </div>
-            <div className="card-body">
-              {error && (
-                <div className="alert alert-danger" role="alert">
-                  {error}
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit}>
-                {/* Title */}
-                <div className="mb-3">
-                  <label htmlFor="title" className="form-label">
-                    Appointment Title *
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="title"
-                    name="title"
-                    value={form.title}
-                    onChange={handleChange}
-                    placeholder="e.g., General Checkup, Follow-up Consultation"
-                    required
-                  />
-                </div>
-
-                {/* Description */}
-                <div className="mb-3">
-                  <label htmlFor="description" className="form-label">
-                    Description
-                  </label>
-                  <textarea
-                    className="form-control"
-                    id="description"
-                    name="description"
-                    rows="3"
-                    value={form.description}
-                    onChange={handleChange}
-                    placeholder="Brief description of your concerns or reason for appointment..."
-                  />
-                </div>
-
-                {/* Preferred Date & Time */}
-                <div className="mb-3">
-                  <label htmlFor="patient_suggested_date" className="form-label">
-                    Preferred Date & Time *
-                  </label>
-                  <input
-                    type="datetime-local"
-                    className="form-control"
-                    id="patient_suggested_date"
-                    name="patient_suggested_date"
-                    value={form.patient_suggested_date}
-                    onChange={handleChange}
-                    min={getMinDateTime()}
-                    required
-                  />
-                  <div className="form-text">
-                    This is your preferred time. The provider may suggest an alternative time.
-                  </div>
-                </div>
-
-                {/* Provider Selection */}
-                <div className="mb-3">
-                  <label htmlFor="provider" className="form-label">
-                    Select Provider *
-                  </label>
-                  <select
-                    className="form-select"
-                    id="provider"
-                    name="provider"
-                    value={form.provider}
-                    onChange={handleChange}
-                    required
-                  >
-                    <option value="">Choose a provider...</option>
-                    {providers.map(provider => (
-                      <option key={provider.id} value={provider.id}>
-                        Dr. {provider.first_name} {provider.last_name}
-                        {provider.specialty && ` - ${provider.specialty}`}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Patient Selection (if user is admin/staff) */}
-                <div className="mb-4">
-                  <label htmlFor="patient" className="form-label">
-                    Select Patient (Optional)
-                  </label>
-                  <select
-                    className="form-select"
-                    id="patient"
-                    name="patient"
-                    value={form.patient}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select patient (or leave blank for yourself)</option>
-                    {patients.map(patient => (
-                      <option key={patient.id} value={patient.id}>
-                        {patient.first_name} {patient.last_name}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="form-text">
-                    If you're booking for someone else, select the patient. Otherwise, leave blank to book for yourself.
-                  </div>
-                </div>
-
-                {/* Buttons */}
-                <div className="d-flex gap-2 justify-content-end">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={() => navigate('/appointments')}
-                    disabled={loading}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        Requesting Appointment...
-                      </>
-                    ) : (
-                      'Request Appointment'
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          {/* Information Card */}
-          <div className="card mt-4">
-            <div className="card-body">
-              <h6 className="card-title">How it works:</h6>
-              <ul className="list-unstyled mb-0">
-                <li>✓ Request an appointment with your preferred provider</li>
-                <li>✓ Suggest your preferred date and time</li>
-                <li>✓ The provider will review and may propose an alternative time</li>
-                <li>✓ You'll be notified when the appointment is confirmed</li>
-              </ul>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="flex items-center justify-center py-12">
+              <div className="flex items-center space-x-3">
+                <svg className="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span className="text-lg text-gray-600">Loading appointment details...</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <div className="bg-blue-600 p-3 rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            {isEdit ? 'Update Appointment' : 'Schedule New Appointment'}
+          </h2>
+          <p className="text-gray-600 text-lg">
+            {isEdit ? 'Modify your appointment details below' : 'Fill in the details to request a new appointment'}
+          </p>
+        </div>
+
+        {/* Form Card */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 text-red-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
+                </svg>
+                <span className="text-red-800 font-medium">{error}</span>
+              </div>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Appointment Type */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Appointment Type <span className="text-red-500">*</span>
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {appointmentTypes.map(type => (
+                  <button
+                    key={type.value}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, appointment_type: type.value }))}
+                    className={`p-3 rounded-xl border-2 transition-all duration-200 ${
+                      formData.appointment_type === type.value
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="text-2xl block mb-1">{type.icon}</span>
+                    <span className="text-xs font-medium">{type.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Title */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Appointment Title <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                placeholder="e.g., Annual Physical, Follow-up Consultation"
+                required
+              />
+            </div>
+
+            {/* Reason for Visit */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Reason for Visit
+              </label>
+              <input
+                type="text"
+                name="reason"
+                value={formData.reason}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                placeholder="Brief description of why you need this appointment"
+              />
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Additional Details
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                rows="3"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                placeholder="Any specific concerns, symptoms, or information for the provider..."
+              />
+            </div>
+
+            {/* Patient Selection (Staff only) */}
+            {isStaff && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Select Patient <span className="text-red-500">*</span>
+                </label>
+                <select
+                  name="patient"
+                  value={formData.patient}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                  required={!isEdit}
+                  disabled={loadingPatients}
+                >
+                  <option value="">Choose a patient...</option>
+                  {patients.map(patient => (
+                    <option key={patient.id} value={patient.id}>
+                      {patient.first_name} {patient.last_name} {patient.date_of_birth ? `- DOB: ${new Date(patient.date_of_birth).toLocaleDateString()}` : ''}
+                    </option>
+                  ))}
+                </select>
+                {loadingPatients && <p className="text-xs text-gray-500 mt-1">Loading patients...</p>}
+              </div>
+            )}
+
+            {/* Provider Selection */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Select Healthcare Provider <span className="text-red-500">*</span>
+              </label>
+              <select
+                name="provider"
+                value={formData.provider}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                required
+                disabled={loadingProviders}
+              >
+                <option value="">Choose a provider...</option>
+                {providers.map(provider => (
+                  <option key={provider.id} value={provider.id}>
+                    Dr. {provider.first_name} {provider.last_name} {provider.specialization && `- ${provider.specialization}`}
+                  </option>
+                ))}
+              </select>
+              {loadingProviders && <p className="text-xs text-gray-500 mt-1">Loading providers...</p>}
+            </div>
+
+            {/* Date & Time */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Preferred Date & Time <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="datetime-local"
+                name="patient_suggested_date"
+                value={formData.patient_suggested_date}
+                onChange={handleChange}
+                min={getMinDateTime()}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                required
+              />
+              <p className="text-xs text-gray-500 mt-1 flex items-center">
+                <span className="mr-1">⏰</span>
+                Your preferred time. The provider may suggest alternative times.
+              </p>
+            </div>
+
+            {/* Duration */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Estimated Duration
+              </label>
+              <select
+                name="duration"
+                value={formData.duration}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              >
+                <option value="15">15 minutes</option>
+                <option value="30">30 minutes</option>
+                <option value="45">45 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="90">1.5 hours</option>
+                <option value="120">2 hours</option>
+              </select>
+            </div>
+
+            {/* Location/Virtual Toggle */}
+            <div className="space-y-4">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="is_virtual"
+                  id="is_virtual"
+                  checked={formData.is_virtual}
+                  onChange={handleChange}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label htmlFor="is_virtual" className="ml-2 block text-sm text-gray-700">
+                  This is a virtual/telehealth appointment
+                </label>
+              </div>
+
+              {!formData.is_virtual && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Location / Room
+                  </label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    placeholder="e.g., Main Clinic, Room 123"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Information Box */}
+            <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+              <div className="flex items-start">
+                <div className="bg-blue-100 p-2 rounded-full mr-3">
+                  <span className="text-blue-600">ℹ️</span>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-blue-900">What happens next?</h4>
+                  <p className="text-sm text-blue-700 mt-1">
+                    {isEdit 
+                      ? "Your changes will be saved. The provider will be notified of the updates."
+                      : "Your appointment request will be sent to the provider. They will review and either confirm or propose an alternative time."}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Submit Buttons */}
+            <div className="flex justify-between pt-6 border-t border-gray-200">
+              <button
+                type="button"
+                onClick={() => navigate('/appointments')}
+                className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={submitting}
+                className="px-8 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed min-w-[200px]"
+              >
+                {submitting ? (
+                  <div className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {isEdit ? 'Updating...' : 'Scheduling...'}
+                  </div>
+                ) : (
+                  isEdit ? 'Update Appointment' : 'Schedule Appointment'
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        </div>
     </div>
   );
 };

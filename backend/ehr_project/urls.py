@@ -9,6 +9,9 @@ urlpatterns = [
     path('api/patients/', include('patients.urls')),
     path('api/appointments_app/', include('appointments_app.urls')),
     path('api/reports/', include('reports.urls')),
+    path('api/admin/', include('accounts.urls_admin')),
+    path('api/prescriptions/', include('prescriptions.urls')),
+    path('api/lab-results/', include('labresults.urls')),  
 ]
 
 if settings.DEBUG:

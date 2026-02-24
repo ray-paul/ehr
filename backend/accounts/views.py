@@ -120,3 +120,11 @@ def verify_staff(request, user_id):
             {"error": "User not found."},
             status=status.HTTP_404_NOT_FOUND
         )
+    
+class UserDetailAPI(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+    def get_object(self):
+        return self.request.user
