@@ -1,6 +1,8 @@
+# backend/accounts/views.py
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
+from django.utils import timezone
 from knox.models import AuthToken
 from .models import User
 from .serializers import UserSerializer, LoginSerializer, StaffRegisterSerializer, PatientRegisterSerializer
@@ -37,6 +39,7 @@ class StaffRegisterAPI(generics.GenericAPIView):
                 
                 # Staff accounts need verification
                 user.is_verified = False
+                user.is_active = True  # Make sure user is active
                 user.save()
                 
                 return Response({
@@ -66,6 +69,7 @@ class PatientRegisterAPI(generics.GenericAPIView):
                 
                 # Patients are auto-verified
                 user.is_verified = True
+                user.is_active = True  # Make sure user is active
                 user.save()
                 
                 return Response({
@@ -95,15 +99,17 @@ class UserDetailAPI(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
 
     def get_object(self):
+        # This ensures users can only access their own profile
         return self.request.user
 
-# Optional: User verification endpoint for admins
+# User verification endpoint for admins
 @api_view(['POST'])
 @permission_classes([permissions.IsAdminUser])
 def verify_staff(request, user_id):
     try:
         user = User.objects.get(id=user_id)
-        if user.is_medical_staff and not user.is_verified:
+        # Check if user is medical staff (you may need to define this property)
+        if user.user_type in ['doctor', 'nurse', 'pharmacist', 'radiologist', 'labscientist'] and not user.is_verified:
             user.is_verified = True
             user.verified_at = timezone.now()
             user.save()
@@ -120,11 +126,3 @@ def verify_staff(request, user_id):
             {"error": "User not found."},
             status=status.HTTP_404_NOT_FOUND
         )
-    
-class UserDetailAPI(generics.RetrieveUpdateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
-
-    def get_object(self):
-        return self.request.user

@@ -1,6 +1,9 @@
 # backend/patients/serializers.py
 from rest_framework import serializers
-from .models import Patient, ClinicalNote, Allergy, Medication, Appointment
+from .models import (
+    Patient, ClinicalNote, Allergy, ChronicCondition, 
+    Medication, Insurance, PrimaryCarePhysician
+)
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -10,27 +13,52 @@ class UserBasicSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'user_type')
 
+class AllergySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Allergy
+        fields = '__all__'
+        read_only_fields = ('created_at', 'updated_at')
+
+class ChronicConditionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChronicCondition
+        fields = '__all__'
+        read_only_fields = ('created_at', 'updated_at')
+
+class MedicationSerializer(serializers.ModelSerializer):
+    prescribed_by_name = serializers.CharField(source='prescribed_by.get_full_name', read_only=True)
+    
+    class Meta:
+        model = Medication
+        fields = '__all__'
+        read_only_fields = ('created_at', 'updated_at')
+
+class InsuranceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Insurance
+        fields = '__all__'
+        read_only_fields = ('created_at', 'updated_at')
+
+class PrimaryCarePhysicianSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PrimaryCarePhysician
+        fields = '__all__'
+        read_only_fields = ('created_at', 'updated_at')
+
 class PatientSerializer(serializers.ModelSerializer):
     user_details = UserBasicSerializer(source='user', read_only=True)
-    full_name = serializers.SerializerMethodField()
-    age = serializers.SerializerMethodField()
+    full_name = serializers.CharField(source='full_name', read_only=True)
+    age = serializers.IntegerField(source='age', read_only=True)
+    allergies = AllergySerializer(many=True, read_only=True)
+    chronic_conditions = ChronicConditionSerializer(many=True, read_only=True)
+    medications = MedicationSerializer(many=True, read_only=True)
+    insurance = InsuranceSerializer(read_only=True)
+    primary_care_physician = PrimaryCarePhysicianSerializer(read_only=True)
     
     class Meta:
         model = Patient
         fields = '__all__'
         read_only_fields = ('created_at', 'updated_at')
-    
-    def get_full_name(self, obj):
-        return f"{obj.user.first_name} {obj.user.last_name}"
-    
-    def get_age(self, obj):
-        from datetime import date
-        if obj.date_of_birth:
-            today = date.today()
-            return today.year - obj.date_of_birth.year - (
-                (today.month, today.day) < (obj.date_of_birth.month, obj.date_of_birth.day)
-            )
-        return None
 
 class PatientCreateSerializer(serializers.ModelSerializer):
     username = serializers.CharField(write_only=True, required=False)
@@ -42,7 +70,7 @@ class PatientCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = ('username', 'password', 'email', 'first_name', 'last_name',
-                 'date_of_birth', 'gender', 'phone', 'address', 'emergency_contact')
+                 'date_of_birth', 'gender', 'phone', 'address', 'emergency_contact', 'blood_type')
     
     def create(self, validated_data):
         request = self.context.get('request')
@@ -66,24 +94,25 @@ class PatientCreateSerializer(serializers.ModelSerializer):
                 last_name=last_name or ''
             )
             new_user.user_type = 'patient'
+            new_user.is_active = True
             new_user.save()
         else:
             # For master_admin creating patients without user credentials
-            # Create a basic user
             import random
             import string
             
-            random_username = f"patient_{random.randint(10000, 99999)}"
+            random_username = email or f"patient_{random.randint(10000, 99999)}"
             random_password = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
             
             new_user = User.objects.create_user(
-                username=email or random_username,
+                username=random_username,
                 password=random_password,
                 email=email or '',
                 first_name=first_name or validated_data.get('first_name', ''),
                 last_name=last_name or validated_data.get('last_name', '')
             )
             new_user.user_type = 'patient'
+            new_user.is_active = True
             new_user.save()
         
         # Create patient with new user
@@ -98,23 +127,3 @@ class ClinicalNoteSerializer(serializers.ModelSerializer):
         model = ClinicalNote
         fields = '__all__'
         read_only_fields = ('created_at', 'updated_at', 'provider')
-
-class AllergySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Allergy
-        fields = '__all__'
-        read_only_fields = ('created_at',)
-
-class MedicationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Medication
-        fields = '__all__'
-
-class AppointmentSerializer(serializers.ModelSerializer):
-    patient_name = serializers.CharField(source='patient.full_name', read_only=True)
-    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
-    
-    class Meta:
-        model = Appointment
-        fields = '__all__'
-        read_only_fields = ('created_at', 'updated_at')

@@ -26,7 +26,8 @@ class Appointment(models.Model):
         ('imaging', 'Imaging/Radiology'),
     )
     
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments')
+    # CHANGE THIS related_name to avoid conflict
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments_app')
     provider = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='provider_appointments')
     
     # Basic Info

@@ -13,7 +13,6 @@ const PatientForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [testResult, setTestResult] = useState('');
   
   const [formData, setFormData] = useState({
     first_name: '',
@@ -25,24 +24,12 @@ const PatientForm = () => {
     address: '',
     emergency_contact: '',
     blood_type: '',
-    allergies: '',
-    chronic_conditions: '',
-    current_medications: '',
-    insurance_provider: '',
-    insurance_id: '',
-    primary_care_physician: ''
   });
 
   const isEdit = !!id;
   const canEdit = ['doctor', 'admin', 'master_admin'].includes(currentUser?.user_type);
 
   useEffect(() => {
-    console.log('🔍 PatientForm mounted');
-    console.log('👤 Current user:', currentUser);
-    console.log('📝 isEdit:', isEdit);
-    console.log('🔑 Token exists:', !!localStorage.getItem('token'));
-    console.log('🔑 Token preview:', localStorage.getItem('token')?.substring(0, 20) + '...');
-    
     if (isEdit) {
       fetchPatient();
     }
@@ -51,12 +38,19 @@ const PatientForm = () => {
   const fetchPatient = async () => {
     setLoading(true);
     try {
-      console.log('📥 Fetching patient data for ID:', id);
       const response = await api.get(`/patients/patients/${id}/`);
-      console.log('✅ Patient data received:', response.data);
-      setFormData(response.data);
+      setFormData({
+        first_name: response.data.first_name || '',
+        last_name: response.data.last_name || '',
+        email: response.data.email || '',
+        date_of_birth: response.data.date_of_birth || '',
+        gender: response.data.gender || '',
+        phone: response.data.phone || '',
+        address: response.data.address || '',
+        emergency_contact: response.data.emergency_contact || '',
+        blood_type: response.data.blood_type || '',
+      });
     } catch (error) {
-      console.error('❌ Error fetching patient:', error);
       setError('Error loading patient data');
     } finally {
       setLoading(false);
@@ -95,162 +89,55 @@ const PatientForm = () => {
     return true;
   };
 
-  // Test function to directly test the POST endpoint
-  const testDirectPost = async () => {
-    console.log('🧪 TEST: Direct POST to patients endpoint');
-    setTestResult('Testing...');
-    
-    const testData = {
-      first_name: 'Test',
-      last_name: 'User',
-      date_of_birth: '1990-01-01',
-      gender: 'M',
-      phone: '1234567890',
-      email: 'test@example.com'
-    };
-    
-    console.log('📤 Test data:', testData);
-    console.log('🔑 Token:', localStorage.getItem('token')?.substring(0, 20) + '...');
-    
-    try {
-      const response = await fetch('http://localhost:8000/api/patients/patients/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(testData)
-      });
-      
-      console.log('📥 Response status:', response.status);
-      const data = await response.json();
-      console.log('📥 Response data:', data);
-      
-      if (response.ok) {
-        setTestResult(`✅ Success! Patient created with ID: ${data.id}`);
-      } else {
-        setTestResult(`❌ Failed: ${JSON.stringify(data)}`);
-      }
-    } catch (error) {
-      console.error('❌ Fetch error:', error);
-      setTestResult(`❌ Error: ${error.message}`);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('🔵 FORM SUBMITTED - handleSubmit called');
-    console.log('👤 Current user:', currentUser);
-    console.log('🔑 Token exists:', !!localStorage.getItem('token'));
-    console.log('📦 Raw form data:', formData);
-
     setSubmitting(true);
     setError('');
     setSuccess('');
 
     if (!validateForm()) {
-      console.log('❌ Form validation failed');
       setSubmitting(false);
       return;
     }
 
     try {
-      let submitData;
-      let url;
-      let method;
+      const submitData = {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        date_of_birth: formData.date_of_birth,
+        gender: formData.gender,
+        phone: formData.phone,
+        email: formData.email || '',
+        address: formData.address || '',
+        emergency_contact: formData.emergency_contact || '',
+        blood_type: formData.blood_type || '',
+      };
       
       if (isEdit) {
-        url = `/patients/patients/${id}/`;
-        method = 'PUT';
-        submitData = formData;
-        console.log('📤 Sending PUT to:', url);
+        await api.put(`/patients/patients/${id}/`, submitData);
+        setSuccess('Patient updated successfully!');
       } else {
-        url = '/patients/patients/';
-        method = 'POST';
-        
-        // Prepare data for creation
-        submitData = {
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          date_of_birth: formData.date_of_birth,
-          gender: formData.gender,
-          phone: formData.phone,
-          email: formData.email || `${formData.first_name.toLowerCase()}.${formData.last_name.toLowerCase()}@example.com`,
-          address: formData.address || '',
-          emergency_contact: formData.emergency_contact || '',
-        };
-        
-        // Only add these for master_admin
-        if (currentUser?.user_type === 'master_admin') {
-          submitData.username = formData.email || `${formData.first_name.toLowerCase()}.${formData.last_name.toLowerCase()}`;
-          submitData.password = 'TemporaryPass123!';
-          console.log('👑 Master admin - adding username/password');
-        }
-        
-        console.log('📤 Sending POST to:', url);
+        await api.post('/patients/patients/', submitData);
+        setSuccess('Patient added successfully!');
       }
-      
-      console.log('📦 Final submit data:', {
-        ...submitData,
-        password: submitData.password ? '[HIDDEN]' : undefined
-      });
-      
-      // Log the full request details
-      console.log('🔍 Request details:', {
-        url: url,
-        method: method,
-        headers: {
-          Authorization: `Token ${localStorage.getItem('token')?.substring(0, 20)}...`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      const response = method === 'PUT' 
-        ? await api.put(url, submitData)
-        : await api.post(url, submitData);
-      
-      console.log('✅ Request successful:', response.data);
-      setSuccess(isEdit ? 'Patient updated successfully!' : 'Patient added successfully!');
       
       setTimeout(() => {
         navigate('/patients');
       }, 1500);
       
     } catch (error) {
-      console.error('❌ Request failed:', {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        message: error.message,
-        config: {
-          url: error.config?.url,
-          method: error.config?.method,
-          data: error.config?.data ? JSON.parse(error.config.data) : null
-        }
-      });
-      
-      // Handle specific errors
-      if (error.response?.status === 403) {
-        setError('Permission denied. Your account may not have access to create patients.');
-      } else if (error.response?.status === 401) {
-        setError('Authentication failed. Please log in again.');
-      } else if (error.response?.status === 400) {
-        // Handle validation errors
+      if (error.response?.status === 400) {
         const errorData = error.response.data;
         if (typeof errorData === 'object') {
           const errorMessages = Object.entries(errorData)
             .map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages[0] : messages}`)
             .join(', ');
-          setError(errorMessages || 'Validation error');
+          setError(errorMessages);
         } else {
-          setError(errorData || 'Invalid data provided');
+          setError(errorData);
         }
-      } else if (error.code === 'ECONNABORTED') {
-        setError('Request timeout. Please try again.');
-      } else if (error.message === 'Network Error') {
-        setError('Network error. Cannot connect to server.');
       } else {
-        setError(error.response?.data?.detail || error.response?.data?.message || 'Error saving patient');
+        setError(error.response?.data?.detail || 'Error saving patient');
       }
     } finally {
       setSubmitting(false);
@@ -263,13 +150,11 @@ const PatientForm = () => {
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <div className="flex items-center justify-center py-12">
-              <div className="flex items-center space-x-3">
-                <svg className="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span className="text-lg text-gray-600">Loading patient data...</span>
-              </div>
+              <svg className="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span className="text-lg text-gray-600">Loading patient data...</span>
             </div>
           </div>
         </div>
@@ -300,15 +185,12 @@ const PatientForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <div className="bg-green-600 p-3 rounded-full">
               <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
-                <line x1="17" y1="11" x2="19" y2="13"/>
-                <line x1="5" y1="11" x2="3" y2="13"/>
               </svg>
             </div>
           </div>
@@ -320,7 +202,6 @@ const PatientForm = () => {
           </p>
         </div>
 
-        {/* Messages */}
         {success && (
           <div className="mb-6 bg-green-50 border border-green-200 rounded-xl p-4">
             <div className="flex items-center">
@@ -343,30 +224,8 @@ const PatientForm = () => {
           </div>
         )}
 
-        {/* Test Result Display */}
-        {testResult && (
-          <div className="mb-6 bg-purple-50 border border-purple-200 rounded-xl p-4">
-            <div className="flex items-center">
-              <span className="text-purple-800 font-medium">{testResult}</span>
-            </div>
-          </div>
-        )}
-
-        {/* Form */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-          {/* Test Button */}
-          <div className="mb-6 flex justify-end">
-            <button
-              type="button"
-              onClick={testDirectPost}
-              className="bg-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors duration-200"
-            >
-              🧪 Test Direct POST
-            </button>
-          </div>
-
           <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Personal Information */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <span className="text-xl mr-2">👤</span>
@@ -383,7 +242,6 @@ const PatientForm = () => {
                     value={formData.first_name}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                    placeholder="Enter first name"
                     required
                   />
                 </div>
@@ -397,7 +255,6 @@ const PatientForm = () => {
                     value={formData.last_name}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                    placeholder="Enter last name"
                     required
                   />
                 </div>
@@ -411,7 +268,6 @@ const PatientForm = () => {
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                    placeholder="patient@example.com"
                   />
                 </div>
                 <div>
@@ -455,7 +311,6 @@ const PatientForm = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                    placeholder="(555) 123-4567"
                     required
                   />
                 </div>
@@ -469,13 +324,11 @@ const PatientForm = () => {
                     onChange={handleChange}
                     rows="2"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                    placeholder="Street address, city, state, zip code"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Medical Information */}
             <div className="border-t border-gray-200 pt-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <span className="text-xl mr-2">🏥</span>
@@ -503,62 +356,9 @@ const PatientForm = () => {
                     <option value="O-">O-</option>
                   </select>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Primary Care Physician
-                  </label>
-                  <input
-                    type="text"
-                    name="primary_care_physician"
-                    value={formData.primary_care_physician}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                    placeholder="Dr. Name"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Allergies
-                  </label>
-                  <textarea
-                    name="allergies"
-                    value={formData.allergies}
-                    onChange={handleChange}
-                    rows="2"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                    placeholder="List any allergies (e.g., Penicillin, Latex, Peanuts)"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Chronic Conditions
-                  </label>
-                  <textarea
-                    name="chronic_conditions"
-                    value={formData.chronic_conditions}
-                    onChange={handleChange}
-                    rows="2"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                    placeholder="e.g., Hypertension, Diabetes, Asthma"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Current Medications
-                  </label>
-                  <textarea
-                    name="current_medications"
-                    value={formData.current_medications}
-                    onChange={handleChange}
-                    rows="2"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                    placeholder="List current medications and dosages"
-                  />
-                </div>
               </div>
             </div>
 
-            {/* Emergency Contact */}
             <div className="border-t border-gray-200 pt-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <span className="text-xl mr-2">🚑</span>
@@ -581,43 +381,6 @@ const PatientForm = () => {
               </div>
             </div>
 
-            {/* Insurance Information */}
-            <div className="border-t border-gray-200 pt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <span className="text-xl mr-2">💳</span>
-                Insurance Information
-              </h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Insurance Provider
-                  </label>
-                  <input
-                    type="text"
-                    name="insurance_provider"
-                    value={formData.insurance_provider}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                    placeholder="e.g., Blue Cross, Aetna"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Insurance ID / Policy Number
-                  </label>
-                  <input
-                    type="text"
-                    name="insurance_id"
-                    value={formData.insurance_id}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
-                    placeholder="Policy number"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Form Actions */}
             <div className="flex justify-between pt-6 border-t border-gray-200">
               <button
                 type="button"

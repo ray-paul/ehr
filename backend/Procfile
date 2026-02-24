@@ -1,0 +1,3 @@
+# backend/Procfile
+web: gunicorn ehr_project.wsgi:application
+release: python manage.py migrate

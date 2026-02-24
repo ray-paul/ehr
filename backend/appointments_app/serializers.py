@@ -1,74 +1,77 @@
+# backend/appointments_app/serializers.py
 from rest_framework import serializers
-from .models import Appointment, AppointmentMessage, AppointmentHistory
-from patients.models import Patient
-from accounts.models import User
+from .models import Appointment, AppointmentMessage, AppointmentFeedback
 from patients.serializers import PatientSerializer
 from accounts.serializers import UserSerializer
 
-class PatientBasicSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-    
-    class Meta:
-        model = Patient
-        fields = ['id', 'user', 'date_of_birth', 'blood_group', 'emergency_contact']
-
-class ProviderBasicSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'user_type', 'specialization']
-
 class AppointmentMessageSerializer(serializers.ModelSerializer):
-    sender_details = ProviderBasicSerializer(source='sender', read_only=True)
+    sender_name = serializers.CharField(source='sender.get_full_name', read_only=True)
+    sender_type = serializers.CharField(source='sender.user_type', read_only=True)
     
     class Meta:
         model = AppointmentMessage
-        fields = ['id', 'appointment', 'sender', 'sender_details', 'message', 'created_at']
-        read_only_fields = ['sender', 'created_at']
+        fields = '__all__'
+        read_only_fields = ('created_at', 'is_read', 'read_at')
 
-class AppointmentHistorySerializer(serializers.ModelSerializer):
-    user_details = ProviderBasicSerializer(source='user', read_only=True)
-    
+class AppointmentFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AppointmentHistory
-        fields = ['id', 'appointment', 'user', 'user_details', 'action', 'old_value', 'new_value', 'created_at']
-        read_only_fields = ['created_at']
+        model = AppointmentFeedback
+        fields = '__all__'
+        read_only_fields = ('submitted_at',)
 
 class AppointmentSerializer(serializers.ModelSerializer):
-    patient_details = PatientBasicSerializer(source='patient', read_only=True)
-    provider_details = ProviderBasicSerializer(source='provider', read_only=True)
-    created_by_details = ProviderBasicSerializer(source='created_by', read_only=True)
-    cancelled_by_details = ProviderBasicSerializer(source='cancelled_by', read_only=True)
+    patient_name = serializers.CharField(source='patient.user.get_full_name', read_only=True)
+    patient_details = PatientSerializer(source='patient', read_only=True)
+    provider_name = serializers.CharField(source='provider.get_full_name', read_only=True)
+    provider_details = UserSerializer(source='provider', read_only=True)
     messages = AppointmentMessageSerializer(many=True, read_only=True)
+    feedback = AppointmentFeedbackSerializer(read_only=True)
+    can_cancel = serializers.SerializerMethodField()
+    can_reschedule = serializers.SerializerMethodField()
+    can_propose = serializers.SerializerMethodField()
     
     class Meta:
         model = Appointment
         fields = '__all__'
-        read_only_fields = ['created_at', 'updated_at', 'reminder_sent_at']
+        read_only_fields = ('created_at', 'updated_at', 'reminder_sent', 'reminder_sent_at')
+    
+    def get_can_cancel(self, obj):
+        request = self.context.get('request')
+        if request and request.user:
+            return obj.status in ['requested', 'proposed', 'confirmed'] and (
+                request.user == obj.provider or 
+                request.user == obj.patient.user or
+                request.user.user_type in ['admin', 'master_admin']
+            )
+        return False
+    
+    def get_can_reschedule(self, obj):
+        request = self.context.get('request')
+        if request and request.user:
+            return obj.status == 'confirmed' and (
+                request.user == obj.provider or 
+                request.user == obj.patient.user
+            )
+        return False
+    
+    def get_can_propose(self, obj):
+        request = self.context.get('request')
+        if request and request.user:
+            return obj.status == 'requested' and request.user == obj.provider
+        return False
 
 class AppointmentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
-        fields = [
-            'patient', 'provider', 'title', 'description', 'reason',
-            'patient_suggested_date', 'duration', 'location', 
-            'is_virtual', 'meeting_link'
-        ]
+        fields = ('title', 'appointment_type', 'description', 'reason', 
+                  'patient_suggested_date', 'estimated_duration', 'provider', 'patient')
     
-    def validate(self, data):
-        # Validate that patient and provider are different
-        if data.get('patient') and data.get('provider'):
-            # You might want to add additional validation here
-            pass
-        return data
-    
-    def create(self, validated_data):
-        validated_data['status'] = 'requested'
-        return super().create(validated_data)
+    def validate_patient_suggested_date(self, value):
+        if value < timezone.now():
+            raise serializers.ValidationError("Appointment date cannot be in the past")
+        return value
 
 class AppointmentUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
-        fields = [
-            'title', 'description', 'reason', 'duration', 
-            'location', 'is_virtual', 'meeting_link'
-        ]
+        fields = ('title', 'appointment_type', 'description', 'reason', 'estimated_duration')
