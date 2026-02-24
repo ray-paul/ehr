@@ -8,6 +8,7 @@ from .models import User
 from .serializers import UserSerializer, LoginSerializer, StaffRegisterSerializer, PatientRegisterSerializer
 
 class LoginAPI(generics.GenericAPIView):
+    permission_classes = [permissions.AllowAny] 
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
