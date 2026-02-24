@@ -20,3 +20,4 @@ databases:
   - name: ehr-db
     databaseName: ehr
     user: ehr_user
+    region: oregon  # Add region specification
