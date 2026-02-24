@@ -192,7 +192,13 @@ if not DEBUG:
     
     # CSRF settings
     CSRF_COOKIE_HTTPONLY = True
-    CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='').split(',')
+    CSRF_TRUSTED_ORIGINS = [
+    'https://*.onrender.com',
+    'http://*.onrender.com',
+    'https://*.vercel.app',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+]
 
 # Knox token settings
 REST_KNOX = {
