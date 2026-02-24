@@ -165,14 +165,39 @@ REST_FRAMEWORK = {
 }
 
 # CORS settings
+# CORS settings
 CORS_ALLOWED_ORIGINS = [
-    'https://ehr-92o5.vercel.app',
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
+    "https://ehr-92o5.vercel.app",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://\w+\.vercel\.app$",
+]
+
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
 
 # Security settings for production
 if not DEBUG:
