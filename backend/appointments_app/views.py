@@ -2,6 +2,7 @@
 from rest_framework import viewsets, permissions, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
 from django.utils import timezone
 from django.db.models import Q
 from .models import Appointment, AppointmentMessage, AppointmentFeedback
@@ -10,6 +11,7 @@ from .serializers import (
     AppointmentUpdateSerializer, AppointmentMessageSerializer,
     AppointmentFeedbackSerializer
 )
+
 
 class AppointmentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
@@ -305,16 +307,149 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 class AppointmentMessageViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentMessageSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = AppointmentMessage.objects.all()
     
     def get_queryset(self):
-        return AppointmentMessage.objects.filter(
-            appointment_id=self.kwargs['appointment_id']
-        ).order_by('created_at')
+        # Get appointment_id from URL kwargs
+        appointment_id = self.kwargs.get('appointment_id')
+        if appointment_id:
+            return AppointmentMessage.objects.filter(
+                appointment_id=appointment_id
+            ).order_by('created_at')
+        return AppointmentMessage.objects.none()
+    
+    def get_object(self):
+        # Override to ensure we're getting the message from the correct appointment
+        appointment_id = self.kwargs.get('appointment_id')
+        message_id = self.kwargs.get('pk')
+        
+        if appointment_id and message_id:
+            return AppointmentMessage.objects.get(
+                id=message_id,
+                appointment_id=appointment_id
+            )
+        return super().get_object()
     
     def perform_create(self, serializer):
-        appointment = Appointment.objects.get(id=self.kwargs['appointment_id'])
+        appointment_id = self.kwargs.get('appointment_id')
+        appointment = Appointment.objects.get(id=appointment_id)
+        
+        # Check permission based on user type
+        user = self.request.user
+        
+        # Patient can only message their own appointments
+        if hasattr(user, 'patient'):
+            if appointment.patient != user.patient:
+                raise PermissionDenied("You can only send messages for your own appointments")
+        
+        # Doctor can only message their own appointments
+        elif user.user_type == 'doctor':
+            if appointment.provider != user:
+                raise PermissionDenied("You can only send messages for your own appointments")
+        
+        # Staff can message any appointment (nurses, admin, etc.)
+        # No additional checks needed
+        
         serializer.save(
             appointment=appointment,
             sender=self.request.user
         )
+    
+    def list(self, request, *args, **kwargs):
+        """List all messages for an appointment"""
+        appointment_id = self.kwargs.get('appointment_id')
+        
+        # Check if user has permission to view these messages
+        try:
+            appointment = Appointment.objects.get(id=appointment_id)
+            user = request.user
+            
+            if hasattr(user, 'patient'):
+                if appointment.patient != user.patient:
+                    return Response(
+                        {'error': 'You can only view messages for your own appointments'},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+            elif user.user_type == 'doctor':
+                if appointment.provider != user:
+                    return Response(
+                        {'error': 'You can only view messages for your own appointments'},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+        except Appointment.DoesNotExist:
+            return Response(
+                {'error': 'Appointment not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        return super().list(request, *args, **kwargs)
+    
+    def create(self, request, *args, **kwargs):
+        """Create a new message for an appointment"""
+        appointment_id = self.kwargs.get('appointment_id')
+        
+        # Check if appointment exists
+        try:
+            appointment = Appointment.objects.get(id=appointment_id)
+        except Appointment.DoesNotExist:
+            return Response(
+                {'error': 'Appointment not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        return super().create(request, *args, **kwargs)
+
+
+class AppointmentFeedbackViewSet(viewsets.ModelViewSet):
+    serializer_class = AppointmentFeedbackSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        # Get appointment_id from URL kwargs
+        appointment_id = self.kwargs.get('appointment_id')
+        if appointment_id:
+            return AppointmentFeedback.objects.filter(appointment_id=appointment_id)
+        return AppointmentFeedback.objects.none()
+    
+    def get_object(self):
+        # Override to ensure we're getting the feedback from the correct appointment
+        appointment_id = self.kwargs.get('appointment_id')
+        if appointment_id:
+            return AppointmentFeedback.objects.get(appointment_id=appointment_id)
+        return super().get_object()
+    
+    def perform_create(self, serializer):
+        appointment_id = self.kwargs.get('appointment_id')
+        appointment = Appointment.objects.get(id=appointment_id)
+        
+        # Only the patient can provide feedback
+        user = self.request.user
+        if not hasattr(user, 'patient') or appointment.patient != user.patient:
+            raise PermissionDenied("Only the patient can provide feedback")
+        
+        # Check if feedback already exists
+        if AppointmentFeedback.objects.filter(appointment=appointment).exists():
+            raise PermissionDenied("Feedback already submitted for this appointment")
+        
+        serializer.save(appointment=appointment)
+    
+    def list(self, request, *args, **kwargs):
+        """List feedback for an appointment"""
+        appointment_id = self.kwargs.get('appointment_id')
+        
+        # Check permission
+        try:
+            appointment = Appointment.objects.get(id=appointment_id)
+            user = request.user
+            
+            if hasattr(user, 'patient') and appointment.patient != user.patient:
+                return Response(
+                    {'error': 'You can only view feedback for your own appointments'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+        except Appointment.DoesNotExist:
+            return Response(
+                {'error': 'Appointment not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        return super().list(request, *args, **kwargs)

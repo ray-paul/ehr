@@ -21,6 +21,8 @@ import Unauthorized from './pages/Unauthorized';
 import PrivateRoute from './components/common/PrivateRoute';
 import { authService } from './services/auth';
 import AdminUsers from './pages/admin/AdminUsers';
+import Notifications from './pages/Notifications';
+import Messages from './pages/Messages';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -210,6 +212,8 @@ function App() {
           <Route path="lab-results" element={<LabResults />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="messages" element={<Messages />} />
           
           {/* Admin routes */}
           <Route path="admin/users" element={<AdminUsers />} />

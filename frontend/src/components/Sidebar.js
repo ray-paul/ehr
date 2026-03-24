@@ -2,22 +2,62 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { authService } from '../services/auth';
+import badgeService from '../services/badgeService';
 
 const Sidebar = ({ isOpen, onClose }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [badgeCounts, setBadgeCounts] = useState({
+    notifications: 0,
+    messages: 0
+  });
   const location = useLocation();
   const currentUser = authService.getCurrentUser() || {};
   const isProvider = ['doctor', 'nurse', 'admin', 'lab_technician'].includes(currentUser.user_type);
 
-  // Close sidebar on mobile when route changes
+  // Fetch initial badge counts
   useEffect(() => {
-    if (window.innerWidth < 768) {
-      onClose();
-    }
-  }, [location.pathname, onClose]);
+    const fetchBadgeCounts = async () => {
+      try {
+        const [notificationCount, messageCount] = await Promise.all([
+          badgeService.getNotificationCount(),
+          badgeService.getMessageCount()
+        ]);
+        setBadgeCounts({
+          notifications: notificationCount,
+          messages: messageCount
+        });
+      } catch (error) {
+        console.error('Error fetching badge counts:', error);
+      }
+    };
+    
+    fetchBadgeCounts();
+    
+    // Set up polling for real-time updates
+    const pollingInterval = badgeService.startPolling((counts) => {
+      setBadgeCounts(counts);
+    });
+    
+    // Cleanup polling on unmount
+    return () => {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+      }
+    };
+  }, []);
 
-  // Navigation items
+  // Update badge counts when navigating to notifications/messages
+  useEffect(() => {
+    if (location.pathname === '/notifications') {
+      setBadgeCounts(prev => ({ ...prev, notifications: 0 }));
+    }
+    if (location.pathname === '/messages') {
+      setBadgeCounts(prev => ({ ...prev, messages: 0 }));
+    }
+  }, [location.pathname]);
+
+  // Navigation items with dynamic badges
   const navItems = [
     {
       path: '/',
@@ -62,17 +102,18 @@ const Sidebar = ({ isOpen, onClose }) => {
       icon: 'fas fa-envelope',
       label: 'Messages',
       roles: ['all'],
-      badge: 3
+      badge: badgeCounts.messages  // Dynamic message count
     },
     {
       path: '/notifications',
       icon: 'fas fa-bell',
       label: 'Notifications',
       roles: ['all'],
-      badge: 5
+      badge: badgeCounts.notifications  // Dynamic notification count
     }
   ];
 
+  // Rest of your sidebar code remains the same...
   const isActive = (path) => {
     if (path === '/') {
       return location.pathname === '/';
@@ -102,7 +143,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             onClick={() => toggleDropdown(item.label)}
             className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200 ${
               isOpen 
-                ? 'bg-blue-600 text-white' 
+                ? 'bg-white bg-opacity-20 text-white' 
                 : 'text-white hover:bg-white hover:bg-opacity-20'
             }`}
           >
@@ -123,8 +164,8 @@ const Sidebar = ({ isOpen, onClose }) => {
                   to={subItem.path}
                   className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-all duration-200 ${
                     isActive(subItem.path)
-                      ? 'bg-blue-600 text-white'
-                      : 'text-white hover:bg-white hover:bg-opacity-20'
+                      ? 'bg-white bg-opacity-20 text-white'
+                      : 'text-gray-200 hover:bg-white hover:bg-opacity-20 hover:text-white'
                   }`}
                   onClick={() => {
                     if (window.innerWidth < 768) onClose();
@@ -151,21 +192,29 @@ const Sidebar = ({ isOpen, onClose }) => {
         }`}
         onClick={() => {
           if (window.innerWidth < 768) onClose();
+          // Mark as read when clicked (optional)
+          if (item.path === '/notifications' && badgeCounts.notifications > 0) {
+            // Optionally mark notifications as read when clicked
+          }
+          if (item.path === '/messages' && badgeCounts.messages > 0) {
+            // Optionally mark messages as read when clicked
+          }
         }}
       >
         <div className="flex items-center space-x-3">
           <i className={`${item.icon} text-lg`}></i>
           {!collapsed && <span className="font-medium">{item.label}</span>}
         </div>
-        {!collapsed && item.badge && (
-          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-            {item.badge}
+        {!collapsed && item.badge > 0 && (
+          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full min-w-[20px] text-center animate-pulse">
+            {item.badge > 99 ? '99+' : item.badge}
           </span>
         )}
       </Link>
     );
   };
 
+  // Rest of your sidebar component remains the same...
   return (
     <>
       {/* Overlay for mobile */}
@@ -176,7 +225,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         ></div>
       )}
 
-      {/* Sidebar - Starts below header */}
+      {/* Sidebar */}
       <aside
         className={`
           fixed left-0 shadow-lg transition-all duration-300
@@ -190,7 +239,6 @@ const Sidebar = ({ isOpen, onClose }) => {
         `}
         style={{ backgroundColor: 'rgb(62, 64, 149)' }}
       >
-     
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4">
           <div className="px-2 space-y-1">
