@@ -916,3 +916,901 @@ WARNING 2026-03-24 20:32:23,741 basehttp 15988 18788 "GET /api/notifications/unr
 WARNING 2026-03-24 20:32:23,747 basehttp 15988 18416 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
 WARNING 2026-03-24 20:32:52,161 basehttp 15988 18788 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
 WARNING 2026-03-24 20:32:52,167 basehttp 15988 18416 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
+WARNING 2026-03-24 20:33:22,149 basehttp 15988 18416 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
+WARNING 2026-03-24 20:33:22,155 basehttp 15988 18788 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+INFO 2026-03-24 20:33:41,450 basehttp 15988 18788 "GET /api/patients/ HTTP/1.1" 200 474
+WARNING 2026-03-24 20:33:52,669 basehttp 15988 18788 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
+WARNING 2026-03-24 20:33:52,674 basehttp 15988 18416 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+WARNING 2026-03-24 20:34:22,697 basehttp 15988 18788 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+WARNING 2026-03-24 20:34:22,698 basehttp 15988 18416 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
+WARNING 2026-03-24 20:34:52,680 basehttp 15988 18416 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
+WARNING 2026-03-24 20:34:52,686 basehttp 15988 18788 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+WARNING 2026-03-24 20:35:22,760 basehttp 15988 18416 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+WARNING 2026-03-24 20:35:22,791 basehttp 15988 18788 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
+WARNING 2026-03-24 20:35:52,692 basehttp 15988 18788 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
+WARNING 2026-03-24 20:35:52,694 basehttp 15988 18416 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+WARNING 2026-03-24 20:36:22,713 basehttp 15988 18416 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
+WARNING 2026-03-24 20:36:22,717 basehttp 15988 18788 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+WARNING 2026-03-24 20:36:52,658 basehttp 15988 18788 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
+WARNING 2026-03-24 20:36:52,662 basehttp 15988 18416 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+INFO 2026-03-24 21:35:35,893 autoreload 4500 1956 Watching for file changes with StatReloader
+INFO 2026-03-24 21:36:01,377 basehttp 4500 18624 "OPTIONS /api/notifications/unread-count/ HTTP/1.1" 200 0
+WARNING 2026-03-24 21:36:02,140 basehttp 4500 18624 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 21:36:02,437 basehttp 4500 18624 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 21:36:11,252 basehttp 4500 18624 "OPTIONS /api/reports/ HTTP/1.1" 200 0
+INFO 2026-03-24 21:36:11,253 basehttp 4500 18028 "OPTIONS /api/reports/ HTTP/1.1" 200 0
+WARNING 2026-03-24 21:36:14,223 basehttp 4500 18624 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 21:36:14,699 basehttp 4500 18624 "OPTIONS /api/patients/patients/ HTTP/1.1" 200 0
+INFO 2026-03-24 21:36:14,701 basehttp 4500 18624 "OPTIONS /api/patients/patients/ HTTP/1.1" 200 0
+ERROR 2026-03-24 21:36:20,599 log 4500 18028 Internal Server Error: /api/reports/
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: knox_authtoken
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 414, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 324, in perform_authentication
+    request.user
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 227, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 380, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 53, in authenticate
+    user, auth_token = self.authenticate_credentials(auth[1])
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 65, in authenticate_credentials
+    for auth_token in AuthToken.objects.filter(
+                      ~~~~~~~~~~~~~~~~~~~~~~~~^
+            token_key=token[:CONSTANTS.TOKEN_KEY_LENGTH]):
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 398, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: knox_authtoken
+ERROR 2026-03-24 21:36:20,612 log 4500 18624 Internal Server Error: /api/patients/patients/
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: knox_authtoken
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 414, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 324, in perform_authentication
+    request.user
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 227, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 380, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 53, in authenticate
+    user, auth_token = self.authenticate_credentials(auth[1])
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 65, in authenticate_credentials
+    for auth_token in AuthToken.objects.filter(
+                      ~~~~~~~~~~~~~~~~~~~~~~~~^
+            token_key=token[:CONSTANTS.TOKEN_KEY_LENGTH]):
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 398, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: knox_authtoken
+ERROR 2026-03-24 21:36:20,816 basehttp 4500 18028 "GET /api/reports/ HTTP/1.1" 500 181519
+ERROR 2026-03-24 21:36:20,914 basehttp 4500 18624 "GET /api/patients/patients/ HTTP/1.1" 500 181744
+ERROR 2026-03-24 21:36:20,965 log 4500 17256 Internal Server Error: /api/reports/
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: knox_authtoken
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 414, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 324, in perform_authentication
+    request.user
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 227, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 380, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 53, in authenticate
+    user, auth_token = self.authenticate_credentials(auth[1])
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 65, in authenticate_credentials
+    for auth_token in AuthToken.objects.filter(
+                      ~~~~~~~~~~~~~~~~~~~~~~~~^
+            token_key=token[:CONSTANTS.TOKEN_KEY_LENGTH]):
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 398, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: knox_authtoken
+ERROR 2026-03-24 21:36:20,973 basehttp 4500 17256 "GET /api/reports/ HTTP/1.1" 500 181519
+ERROR 2026-03-24 21:36:21,049 log 4500 18028 Internal Server Error: /api/patients/patients/
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: knox_authtoken
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 414, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 324, in perform_authentication
+    request.user
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 227, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 380, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 53, in authenticate
+    user, auth_token = self.authenticate_credentials(auth[1])
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 65, in authenticate_credentials
+    for auth_token in AuthToken.objects.filter(
+                      ~~~~~~~~~~~~~~~~~~~~~~~~^
+            token_key=token[:CONSTANTS.TOKEN_KEY_LENGTH]):
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 398, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: knox_authtoken
+ERROR 2026-03-24 21:36:21,057 basehttp 4500 18028 "GET /api/patients/patients/ HTTP/1.1" 500 181744
+INFO 2026-03-24 21:36:21,119 basehttp 4500 17256 "OPTIONS /api/notifications/ HTTP/1.1" 200 0
+INFO 2026-03-24 21:36:21,120 basehttp 4500 18624 "OPTIONS /api/notifications/preferences/ HTTP/1.1" 200 0
+INFO 2026-03-24 21:36:21,124 basehttp 4500 17256 "OPTIONS /api/notifications/preferences/ HTTP/1.1" 200 0
+INFO 2026-03-24 21:36:21,124 basehttp 4500 18624 "OPTIONS /api/notifications/ HTTP/1.1" 200 0
+ERROR 2026-03-24 21:36:21,283 log 4500 18624 Internal Server Error: /api/notifications/preferences/
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: knox_authtoken
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 414, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 324, in perform_authentication
+    request.user
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 227, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 380, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 53, in authenticate
+    user, auth_token = self.authenticate_credentials(auth[1])
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 65, in authenticate_credentials
+    for auth_token in AuthToken.objects.filter(
+                      ~~~~~~~~~~~~~~~~~~~~~~~~^
+            token_key=token[:CONSTANTS.TOKEN_KEY_LENGTH]):
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 398, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: knox_authtoken
+ERROR 2026-03-24 21:36:21,293 basehttp 4500 18624 "GET /api/notifications/preferences/ HTTP/1.1" 500 182187
+ERROR 2026-03-24 21:36:21,500 log 4500 17256 Internal Server Error: /api/notifications/
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: knox_authtoken
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 414, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 324, in perform_authentication
+    request.user
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 227, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 380, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 53, in authenticate
+    user, auth_token = self.authenticate_credentials(auth[1])
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 65, in authenticate_credentials
+    for auth_token in AuthToken.objects.filter(
+                      ~~~~~~~~~~~~~~~~~~~~~~~~^
+            token_key=token[:CONSTANTS.TOKEN_KEY_LENGTH]):
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 398, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: knox_authtoken
+ERROR 2026-03-24 21:36:21,525 basehttp 4500 17256 "GET /api/notifications/ HTTP/1.1" 500 181223
+ERROR 2026-03-24 21:36:21,606 log 4500 18028 Internal Server Error: /api/notifications/preferences/
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: knox_authtoken
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 414, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 324, in perform_authentication
+    request.user
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 227, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 380, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 53, in authenticate
+    user, auth_token = self.authenticate_credentials(auth[1])
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 65, in authenticate_credentials
+    for auth_token in AuthToken.objects.filter(
+                      ~~~~~~~~~~~~~~~~~~~~~~~~^
+            token_key=token[:CONSTANTS.TOKEN_KEY_LENGTH]):
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 398, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: knox_authtoken
+ERROR 2026-03-24 21:36:21,623 basehttp 4500 18028 "GET /api/notifications/preferences/ HTTP/1.1" 500 182187
+ERROR 2026-03-24 21:36:21,717 log 4500 18624 Internal Server Error: /api/notifications/
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: knox_authtoken
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 497, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 414, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\views.py", line 324, in perform_authentication
+    request.user
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 227, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\rest_framework\request.py", line 380, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 53, in authenticate
+    user, auth_token = self.authenticate_credentials(auth[1])
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\knox\auth.py", line 65, in authenticate_credentials
+    for auth_token in AuthToken.objects.filter(
+                      ~~~~~~~~~~~~~~~~~~~~~~~~^
+            token_key=token[:CONSTANTS.TOKEN_KEY_LENGTH]):
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 398, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Paul\hacksmith\ehr\backend\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 328, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: knox_authtoken
+ERROR 2026-03-24 21:36:21,931 basehttp 4500 18624 "GET /api/notifications/ HTTP/1.1" 500 181223
+WARNING 2026-03-24 21:36:44,209 basehttp 4500 18624 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 21:36:50,028 basehttp 4500 18624 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 21:38:33,548 autoreload 11132 16480 Watching for file changes with StatReloader
+INFO 2026-03-24 21:38:36,912 basehttp 11132 5768 "GET /api/patients/ HTTP/1.1" 200 474
+WARNING 2026-03-24 21:38:41,634 basehttp 11132 5768 "GET /api/notifications/ HTTP/1.1" 401 27
+WARNING 2026-03-24 21:38:41,636 basehttp 11132 16500 "GET /api/notifications/preferences/ HTTP/1.1" 401 27
+WARNING 2026-03-24 21:38:41,649 basehttp 11132 16500 "GET /api/notifications/ HTTP/1.1" 401 27
+WARNING 2026-03-24 21:38:41,650 basehttp 11132 5768 "GET /api/notifications/preferences/ HTTP/1.1" 401 27
+WARNING 2026-03-24 21:38:44,227 basehttp 11132 5768 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 21:38:58,967 basehttp 11132 5768 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 21:39:11,296 basehttp 11132 5768 "GET /api/patients/ HTTP/1.1" 200 474
+WARNING 2026-03-24 21:39:14,190 basehttp 11132 5768 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 21:39:44,650 basehttp 11132 5768 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 21:40:07,488 basehttp 11132 5768 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 21:40:12,341 basehttp 11132 5768 "OPTIONS /api/notifications/notifications/ HTTP/1.1" 200 0
+WARNING 2026-03-24 21:40:12,360 basehttp 11132 16500 "GET /api/notifications/preferences/ HTTP/1.1" 401 27
+WARNING 2026-03-24 21:40:12,392 basehttp 11132 16500 "GET /api/notifications/notifications/ HTTP/1.1" 401 27
+WARNING 2026-03-24 21:40:14,190 basehttp 11132 16500 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 21:40:17,968 basehttp 11132 16500 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 21:40:24,772 basehttp 11132 5768 "OPTIONS /api/messages/conversations/ HTTP/1.1" 200 0
+INFO 2026-03-24 21:40:24,772 basehttp 11132 16500 "OPTIONS /api/messages/conversations/ HTTP/1.1" 200 0
+WARNING 2026-03-24 21:40:24,820 basehttp 11132 16500 "GET /api/messages/conversations/ HTTP/1.1" 404 3096
+WARNING 2026-03-24 21:40:24,879 basehttp 11132 16500 "GET /api/messages/conversations/ HTTP/1.1" 404 3096
+WARNING 2026-03-24 21:40:27,839 basehttp 11132 5768 "GET /api/notifications/preferences/ HTTP/1.1" 401 27
+WARNING 2026-03-24 21:40:27,840 basehttp 11132 16500 "GET /api/notifications/notifications/ HTTP/1.1" 401 27
+WARNING 2026-03-24 21:40:27,849 basehttp 11132 5768 "GET /api/notifications/preferences/ HTTP/1.1" 401 27
+WARNING 2026-03-24 21:40:27,866 basehttp 11132 5768 "GET /api/notifications/notifications/ HTTP/1.1" 401 27
+INFO 2026-03-24 21:40:37,819 basehttp 11132 5768 "GET /api/patients/ HTTP/1.1" 200 474
+WARNING 2026-03-24 21:40:44,658 basehttp 11132 5768 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 21:46:33,217 autoreload 16388 12780 Watching for file changes with StatReloader
+WARNING 2026-03-24 21:46:54,323 basehttp 16388 3328 "POST /api/auth/login/ HTTP/1.1" 400 44
+WARNING 2026-03-24 21:47:19,699 basehttp 16388 3328 "GET / HTTP/1.1" 404 2997
+WARNING 2026-03-24 21:47:28,956 basehttp 16388 14888 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 21:48:28,647 basehttp 16388 14888 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 21:48:54,539 basehttp 16388 3328 "POST /api/auth/login/ HTTP/1.1" 200 309
+WARNING 2026-03-24 21:49:28,686 basehttp 16388 14888 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 21:49:36,178 basehttp 16388 3328 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+WARNING 2026-03-24 21:50:28,675 basehttp 16388 14888 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 21:50:36,413 basehttp 16388 3328 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 21:50:53,515 basehttp 16388 3328 "GET /api/notifications/notifications/ HTTP/1.1" 200 321
+INFO 2026-03-24 21:50:54,193 basehttp 16388 3328 "PATCH /api/notifications/notifications/1/mark_read/ HTTP/1.1" 200 27
+INFO 2026-03-24 21:51:09,123 basehttp 16388 3328 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+WARNING 2026-03-24 21:51:28,653 basehttp 16388 14888 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 21:51:36,844 basehttp 16388 14888 "GET /api/notifications/notifications/ HTTP/1.1" 401 27
+WARNING 2026-03-24 21:51:36,851 basehttp 16388 14888 "GET /api/notifications/preferences/ HTTP/1.1" 401 27
+INFO 2026-03-24 21:51:58,596 basehttp 16388 3328 "POST /api/auth/login/ HTTP/1.1" 200 309
+INFO 2026-03-24 21:51:58,917 basehttp 16388 3328 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 21:51:59,106 basehttp 16388 3328 "GET /api/notifications/notifications/ HTTP/1.1" 200 320
+WARNING 2026-03-24 21:52:28,653 basehttp 16388 14888 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 21:53:28,680 basehttp 16388 14888 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 21:54:28,688 basehttp 16388 14888 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 21:55:28,663 basehttp 16388 14888 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 21:56:28,651 basehttp 16388 14888 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 21:57:28,757 basehttp 16388 14888 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 21:58:29,014 basehttp 16388 14888 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 21:58:53,173 autoreload 16388 12780 C:\Users\Paul\hacksmith\ehr\backend\appointments_app\views.py changed, reloading.
+INFO 2026-03-24 21:59:13,193 autoreload 10584 18268 Watching for file changes with StatReloader
+INFO 2026-03-24 21:59:21,308 basehttp 10584 5480 "GET /api/patients/ HTTP/1.1" 200 474
+WARNING 2026-03-24 21:59:22,183 basehttp 10584 5480 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 21:59:37,787 basehttp 10584 5480 "OPTIONS /api/patients/ HTTP/1.1" 200 0
+INFO 2026-03-24 21:59:37,803 basehttp 10584 5480 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 21:59:37,816 basehttp 10584 5480 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 22:00:09,522 basehttp 10584 5480 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+WARNING 2026-03-24 22:00:10,445 basehttp 10584 5480 "POST /api/auth/login/ HTTP/1.1" 400 44
+INFO 2026-03-24 22:00:30,271 basehttp 10584 5480 "POST /api/auth/login/ HTTP/1.1" 200 309
+WARNING 2026-03-24 22:00:30,672 basehttp 10584 5480 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 22:00:30,703 basehttp 10584 5480 "GET /api/reports/ HTTP/1.1" 200 52
+WARNING 2026-03-24 22:00:30,719 basehttp 10584 5480 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 22:00:30,734 basehttp 10584 5480 "GET /api/reports/ HTTP/1.1" 200 52
+WARNING 2026-03-24 22:01:00,765 basehttp 10584 5480 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 22:01:02,765 basehttp 10584 5480 "GET /api/patients/ HTTP/1.1" 200 474
+WARNING 2026-03-24 22:01:30,654 basehttp 10584 5480 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 22:02:00,676 basehttp 10584 5480 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 22:02:30,666 basehttp 10584 5480 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 22:03:00,690 basehttp 10584 5480 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 22:03:30,666 basehttp 10584 5480 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 22:04:28,685 basehttp 10584 5480 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 22:05:28,658 basehttp 10584 5480 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+WARNING 2026-03-24 22:06:29,054 basehttp 10584 5480 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 22:06:39,917 autoreload 10584 18268 C:\Users\Paul\hacksmith\ehr\backend\ehr_project\settings.py changed, reloading.
+INFO 2026-03-24 22:06:56,774 autoreload 12052 2668 Watching for file changes with StatReloader
+WARNING 2026-03-24 22:07:29,192 basehttp 12052 18464 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7489
+INFO 2026-03-24 22:07:56,058 autoreload 12052 2668 C:\Users\Paul\hacksmith\ehr\backend\ehr_project\urls.py changed, reloading.
+INFO 2026-03-24 22:07:59,288 autoreload 15896 18820 Watching for file changes with StatReloader
+WARNING 2026-03-24 22:08:28,972 basehttp 15896 15368 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7598
+WARNING 2026-03-24 22:09:28,652 basehttp 15896 15368 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7598
+WARNING 2026-03-24 22:10:28,677 basehttp 15896 15368 "GET /api/notifications/unread-count/ HTTP/1.1" 404 7598
+INFO 2026-03-24 22:10:51,668 basehttp 15896 15368 "OPTIONS /api/notifications/notifications/unread_count/ HTTP/1.1" 200 0
+INFO 2026-03-24 22:10:51,669 basehttp 15896 15368 "OPTIONS /api/chat/conversations/unread_count/ HTTP/1.1" 200 0
+INFO 2026-03-24 22:11:05,353 basehttp 15896 15368 - Broken pipe from ('127.0.0.1', 57715)
+INFO 2026-03-24 22:11:05,354 basehttp 15896 9840 - Broken pipe from ('127.0.0.1', 63437)
+INFO 2026-03-24 22:11:22,688 basehttp 15896 17440 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:11:22,909 basehttp 15896 17440 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:11:56,459 basehttp 15896 17440 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:11:56,494 basehttp 15896 17440 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:12:22,984 basehttp 15896 17704 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:12:23,006 basehttp 15896 17704 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:12:29,109 basehttp 15896 17704 "GET /api/patients/ HTTP/1.1" 200 474
+WARNING 2026-03-24 22:12:40,412 basehttp 15896 17704 "GET /api/messages/conversations/ HTTP/1.1" 404 3205
+WARNING 2026-03-24 22:12:40,444 basehttp 15896 17704 "GET /api/messages/conversations/ HTTP/1.1" 404 3205
+INFO 2026-03-24 22:12:43,210 basehttp 15896 7956 "GET /api/notifications/preferences/ HTTP/1.1" 200 52
+INFO 2026-03-24 22:12:43,235 basehttp 15896 7956 "GET /api/notifications/preferences/ HTTP/1.1" 200 52
+INFO 2026-03-24 22:12:44,159 basehttp 15896 17704 "GET /api/notifications/notifications/ HTTP/1.1" 200 320
+INFO 2026-03-24 22:12:44,198 basehttp 15896 17704 "GET /api/notifications/notifications/ HTTP/1.1" 200 320
+INFO 2026-03-24 22:18:08,429 basehttp 15896 17908 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 22:18:08,502 basehttp 15896 17908 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 22:18:10,302 basehttp 15896 17908 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:18:10,307 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:18:10,321 basehttp 15896 17908 "GET /api/notifications/notifications/ HTTP/1.1" 200 320
+INFO 2026-03-24 22:18:10,328 basehttp 15896 15028 "GET /api/notifications/preferences/ HTTP/1.1" 200 52
+INFO 2026-03-24 22:18:10,343 basehttp 15896 17908 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:18:10,351 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:18:10,365 basehttp 15896 17908 "GET /api/notifications/notifications/ HTTP/1.1" 200 320
+INFO 2026-03-24 22:18:10,366 basehttp 15896 15028 "GET /api/notifications/preferences/ HTTP/1.1" 200 52
+INFO 2026-03-24 22:18:43,895 basehttp 15896 15028 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 22:18:43,920 basehttp 15896 17908 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:18:44,049 basehttp 15896 17908 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:19:07,469 basehttp 15896 17908 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 22:19:10,160 basehttp 15896 17908 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:19:10,174 basehttp 15896 17908 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:19:16,367 basehttp 15896 17908 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 22:19:25,703 basehttp 15896 17908 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 22:19:40,660 basehttp 15896 17908 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:19:40,688 basehttp 15896 17908 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:20:10,651 basehttp 15896 17908 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:20:10,672 basehttp 15896 17908 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:20:33,691 basehttp 15896 15028 "GET /api/notifications/preferences/ HTTP/1.1" 200 52
+INFO 2026-03-24 22:20:33,697 basehttp 15896 17908 "GET /api/notifications/notifications/ HTTP/1.1" 200 320
+INFO 2026-03-24 22:20:40,650 basehttp 15896 17908 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:20:40,666 basehttp 15896 17908 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:21:10,655 basehttp 15896 17908 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:21:10,668 basehttp 15896 17908 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:22:28,647 basehttp 15896 17908 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:22:28,662 basehttp 15896 17908 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:23:28,674 basehttp 15896 17908 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:23:28,692 basehttp 15896 17908 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:24:28,661 basehttp 15896 17908 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:24:28,679 basehttp 15896 17908 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:24:34,046 basehttp 15896 17908 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 22:24:40,050 basehttp 15896 17908 "OPTIONS /api/notifications/notifications/1/ HTTP/1.1" 200 0
+INFO 2026-03-24 22:24:40,058 basehttp 15896 15028 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-03-24 22:24:40,238 basehttp 15896 17908 "DELETE /api/notifications/notifications/1/ HTTP/1.1" 204 0
+INFO 2026-03-24 22:24:40,250 basehttp 15896 15028 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:24:40,270 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:25:10,190 basehttp 15896 15028 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:25:10,219 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:25:40,184 basehttp 15896 15028 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:25:40,202 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:26:10,182 basehttp 15896 15028 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:26:10,199 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:26:40,181 basehttp 15896 15028 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:26:40,209 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:27:10,189 basehttp 15896 15028 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:27:10,214 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:27:40,169 basehttp 15896 15028 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:27:40,184 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:28:10,170 basehttp 15896 15028 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:28:10,183 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:28:40,190 basehttp 15896 15028 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:28:40,217 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:29:10,186 basehttp 15896 15028 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:29:10,202 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:29:40,165 basehttp 15896 15028 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-03-24 22:29:40,180 basehttp 15896 15028 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11

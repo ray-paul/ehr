@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     # Local apps
     'authentication',
     'notifications',
+    #'messaging',
     #'accounts',
     'patients',
     'reports',
+    'chat',
     'appointments_app',
     'prescriptions',
     'labresults',

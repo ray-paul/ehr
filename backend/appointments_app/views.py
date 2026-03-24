@@ -11,6 +11,7 @@ from .serializers import (
     AppointmentUpdateSerializer, AppointmentMessageSerializer,
     AppointmentFeedbackSerializer
 )
+from notifications.models import Notification  # Add this import
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):
@@ -111,6 +112,16 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             message=message or f"Provider proposed new time: {proposed_date}"
         )
         
+        # Send notification to patient
+        Notification.objects.create(
+            user=appointment.patient.user,
+            title="New Appointment Time Proposed",
+            message=f"Dr. {appointment.provider.last_name} has proposed a new time for your appointment: {proposed_date}",
+            type="appointment",
+            priority="medium",
+            related_url=f"/appointments/{appointment.id}"
+        )
+        
         serializer = self.get_serializer(appointment)
         return Response(serializer.data)
     
@@ -144,6 +155,26 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             message=message or f"Appointment confirmed for {appointment.confirmed_date}"
         )
         
+        # Send notification to patient
+        Notification.objects.create(
+            user=appointment.patient.user,
+            title="Appointment Confirmed",
+            message=f"Your appointment with Dr. {appointment.provider.last_name} has been confirmed for {appointment.confirmed_date}",
+            type="appointment",
+            priority="medium",
+            related_url=f"/appointments/{appointment.id}"
+        )
+        
+        # Send notification to provider
+        Notification.objects.create(
+            user=appointment.provider,
+            title="Appointment Confirmed",
+            message=f"Appointment with {appointment.patient.user.get_full_name()} confirmed for {appointment.confirmed_date}",
+            type="appointment",
+            priority="medium",
+            related_url=f"/appointments/{appointment.id}"
+        )
+        
         serializer = self.get_serializer(appointment)
         return Response(serializer.data)
     
@@ -170,6 +201,26 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             message=f"Appointment cancelled. Reason: {reason}"
         )
         
+        # Send notification to patient
+        Notification.objects.create(
+            user=appointment.patient.user,
+            title="Appointment Cancelled",
+            message=f"Your appointment with Dr. {appointment.provider.last_name} has been cancelled. Reason: {reason}",
+            type="appointment",
+            priority="high",
+            related_url=f"/appointments/{appointment.id}"
+        )
+        
+        # Send notification to provider
+        Notification.objects.create(
+            user=appointment.provider,
+            title="Appointment Cancelled",
+            message=f"Appointment with {appointment.patient.user.get_full_name()} has been cancelled. Reason: {reason}",
+            type="appointment",
+            priority="high",
+            related_url=f"/appointments/{appointment.id}"
+        )
+        
         serializer = self.get_serializer(appointment)
         return Response(serializer.data)
     
@@ -186,6 +237,16 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         appointment.status = 'completed'
         appointment.actual_end_time = timezone.now()
         appointment.save()
+        
+        # Send notification to patient
+        Notification.objects.create(
+            user=appointment.patient.user,
+            title="Appointment Completed",
+            message=f"Your appointment with Dr. {appointment.provider.last_name} has been marked as completed",
+            type="appointment",
+            priority="low",
+            related_url=f"/appointments/{appointment.id}"
+        )
         
         serializer = self.get_serializer(appointment)
         return Response(serializer.data)
@@ -218,6 +279,26 @@ class AppointmentViewSet(viewsets.ModelViewSet):
             message=f"Appointment rescheduled to {new_date}. Reason: {reason}"
         )
         
+        # Send notification to patient
+        Notification.objects.create(
+            user=appointment.patient.user,
+            title="Appointment Rescheduled",
+            message=f"Your appointment with Dr. {appointment.provider.last_name} has been rescheduled to {new_date}",
+            type="appointment",
+            priority="medium",
+            related_url=f"/appointments/{new_appointment.id}"
+        )
+        
+        # Send notification to provider
+        Notification.objects.create(
+            user=appointment.provider,
+            title="Appointment Rescheduled",
+            message=f"Appointment with {appointment.patient.user.get_full_name()} has been rescheduled to {new_date}",
+            type="appointment",
+            priority="medium",
+            related_url=f"/appointments/{new_appointment.id}"
+        )
+        
         serializer = AppointmentSerializer(new_appointment, context={'request': request})
         return Response(serializer.data)
     
@@ -227,10 +308,33 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         serializer = AppointmentMessageSerializer(data=request.data)
         
         if serializer.is_valid():
-            serializer.save(
+            message = serializer.save(
                 appointment=appointment,
                 sender=request.user
             )
+            
+            # Send notification to the other party
+            if hasattr(request.user, 'patient'):
+                # Patient sent message, notify provider
+                Notification.objects.create(
+                    user=appointment.provider,
+                    title="New Message",
+                    message=f"You have a new message from {request.user.get_full_name()} regarding your appointment",
+                    type="message",
+                    priority="medium",
+                    related_url=f"/appointments/{appointment.id}"
+                )
+            else:
+                # Provider sent message, notify patient
+                Notification.objects.create(
+                    user=appointment.patient.user,
+                    title="New Message",
+                    message=f"You have a new message from Dr. {request.user.last_name} regarding your appointment",
+                    type="message",
+                    priority="medium",
+                    related_url=f"/appointments/{appointment.id}"
+                )
+            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -273,6 +377,17 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         serializer = AppointmentFeedbackSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(appointment=appointment)
+            
+            # Send notification to provider about feedback
+            Notification.objects.create(
+                user=appointment.provider,
+                title="New Feedback Received",
+                message=f"Patient {appointment.patient.user.get_full_name()} has submitted feedback for your appointment",
+                type="appointment",
+                priority="low",
+                related_url=f"/appointments/{appointment.id}"
+            )
+            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

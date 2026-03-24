@@ -11,6 +11,9 @@ urlpatterns = [
     path('api/reports/', include('reports.urls')),
     path('api/prescriptions/', include('prescriptions.urls')),
     path('api/lab-results/', include('labresults.urls')),  
+    path('api/notifications/', include('notifications.urls')),  # Add this line
+   # path('api/messaging/', include('messaging.urls')),
+    path('api/chat/', include('chat.urls')),  
 ]
 
 if settings.DEBUG:
