@@ -8,8 +8,12 @@ const PatientList = () => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [error, setError] = useState(null);
   const currentUser = authService.getCurrentUser();
 
+  const isPatient = currentUser?.user_type === 'patient';
+  const isDoctor = currentUser?.user_type === 'doctor';
+  const isAdmin = ['admin', 'master_admin'].includes(currentUser?.user_type);
   const canAddPatient = ['doctor', 'admin', 'master_admin'].includes(currentUser?.user_type);
   const canEditPatient = ['doctor', 'admin', 'master_admin'].includes(currentUser?.user_type);
 
@@ -19,26 +23,63 @@ const PatientList = () => {
 
   const fetchPatients = async () => {
     try {
-      const response = await api.get('/patients/patients/');
-      setPatients(response.data);
+      setLoading(true);
+      setError(null);
+      
+      let response;
+      
+      if (isPatient && currentUser?.patient_id) {
+        // Patients can only see themselves
+        response = await api.get(`/patients/${currentUser.patient_id}/`);
+        // Convert single patient to array for consistent handling
+        setPatients(response.data ? [response.data] : []);
+      } else {
+        // Doctors and admins can see all patients
+        response = await api.get('/patients/patients/');
+        
+        // Normalize the response data to always be an array
+        let patientsData = response.data;
+        
+        if (!Array.isArray(patientsData)) {
+          if (patientsData?.results) {
+            patientsData = patientsData.results;
+          } else if (patientsData?.data) {
+            patientsData = patientsData.data;
+          } else if (typeof patientsData === 'object' && patientsData !== null) {
+            const values = Object.values(patientsData);
+            if (values.length > 0 && values.some(v => typeof v === 'object')) {
+              patientsData = values;
+            } else {
+              patientsData = [];
+            }
+          } else {
+            patientsData = [];
+          }
+        }
+        
+        setPatients(patientsData);
+      }
     } catch (error) {
       console.error('Error fetching patients:', error);
+      setError(error.response?.data?.message || 'Failed to load patients');
+      setPatients([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredPatients = patients.filter(patient => {
+  // Safe filter - ensures patients is always an array
+  const filteredPatients = Array.isArray(patients) ? patients.filter(patient => {
     if (searchTerm) {
       const search = searchTerm.toLowerCase();
-      const fullName = `${patient.first_name} ${patient.last_name}`.toLowerCase();
+      const fullName = `${patient.first_name || ''} ${patient.last_name || ''}`.toLowerCase();
       const email = patient.email?.toLowerCase() || '';
       const phone = patient.phone?.toLowerCase() || '';
       
       return fullName.includes(search) || email.includes(search) || phone.includes(search);
     }
     return true;
-  });
+  }) : [];
 
   if (loading) {
     return (
@@ -51,7 +92,7 @@ const PatientList = () => {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span className="text-lg text-gray-600">Loading patients...</span>
+                <span className="text-lg text-gray-600">Loading...</span>
               </div>
             </div>
           </div>
@@ -60,6 +101,101 @@ const PatientList = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <div className="bg-red-100 p-4 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+              <svg className="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Error Loading Data</h3>
+            <p className="text-gray-600 mb-6">{error}</p>
+            <button
+              onClick={fetchPatients}
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Patient view - only show their own record
+  if (isPatient) {
+    const patient = filteredPatients[0];
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <div className="bg-blue-600 p-3 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              My Profile
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Your personal health information
+            </p>
+          </div>
+
+          {patient ? (
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+              <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+                <div className="flex items-center">
+                  <div className="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
+                    {patient.first_name?.charAt(0)}{patient.last_name?.charAt(0)}
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900">
+                      {patient.first_name} {patient.last_name}
+                    </h3>
+                    <p className="text-gray-600">{patient.email}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Date of Birth</label>
+                    <p className="text-gray-900">{patient.date_of_birth ? new Date(patient.date_of_birth).toLocaleDateString() : 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Gender</label>
+                    <p className="text-gray-900 capitalize">{patient.gender === 'M' ? 'Male' : patient.gender === 'F' ? 'Female' : 'Other'}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Phone</label>
+                    <p className="text-gray-900">{patient.phone || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-500 mb-1">Address</label>
+                    <p className="text-gray-900">{patient.address || 'N/A'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
+              <p className="text-gray-600">No profile information found.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Staff view - show all patients
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -112,7 +248,7 @@ const PatientList = () => {
           </div>
         </div>
 
-        {/* Patients Table */}
+        {/* Patients Table - Staff view */}
         {filteredPatients.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-lg p-12 border border-gray-100 text-center">
             <div className="bg-blue-100 p-4 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
@@ -157,7 +293,7 @@ const PatientList = () => {
                           </div>
                           <div>
                             <div className="text-sm font-medium text-gray-900">
-                              {patient.first_name} {patient.last_name}
+                              {patient.first_name || ''} {patient.last_name || ''}
                             </div>
                             <div className="text-sm text-gray-500">
                               {patient.email || 'No email'}
@@ -216,9 +352,9 @@ const PatientList = () => {
               <div className="flex justify-between items-center">
                 <p className="text-sm text-gray-600">
                   Showing <span className="font-medium">{filteredPatients.length}</span> of{' '}
-                  <span className="font-medium">{patients.length}</span> patients
+                  <span className="font-medium">{Array.isArray(patients) ? patients.length : 0}</span> patients
                 </p>
-                {filteredPatients.length < patients.length && (
+                {searchTerm && (
                   <button
                     onClick={() => setSearchTerm('')}
                     className="text-sm text-blue-600 hover:text-blue-800 font-medium"

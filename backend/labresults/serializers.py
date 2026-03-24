@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import LabTestType, LabOrder, LabResult, LabAttachment
 from patients.serializers import PatientSerializer
-from accounts.serializers import UserSerializer
+from authentication.serializers import UserSerializer
 
 class LabTestTypeSerializer(serializers.ModelSerializer):
     class Meta:

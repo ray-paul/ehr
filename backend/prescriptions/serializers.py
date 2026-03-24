@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Medication, Prescription, PrescriptionDispense, PrescriptionRenewal
 from patients.serializers import PatientSerializer
-from accounts.serializers import UserSerializer
+from authentication.serializers import UserSerializer
 
 class MedicationSerializer(serializers.ModelSerializer):
     class Meta:

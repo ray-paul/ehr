@@ -1,0 +1,41 @@
+# backend/authentication/models.py
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import Permission
+
+class User(AbstractUser):
+    USER_TYPE_CHOICES = (
+        ('patient', 'Patient'),
+        ('doctor', 'Doctor'),
+        ('nurse', 'Nurse'),
+        ('pharmacist', 'Pharmacist'),
+        ('radiologist', 'Radiologist'),
+        ('labscientist', 'Lab Scientist'),
+        ('admin', 'Admin'),
+        ('master_admin', 'Master Admin'),
+    )
+    
+    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='patient')
+    phone = models.CharField(max_length=15, blank=True)
+    address = models.TextField(blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], blank=True)
+    is_verified = models.BooleanField(default=False)
+       
+    def save(self, *args, **kwargs):
+        # Superusers and master admins are always verified
+        if self.is_superuser or self.user_type == 'master_admin':
+            self.is_verified = True
+        
+        # Set proper permissions for master admin
+        if self.user_type == 'master_admin':
+            self.is_superuser = True
+            self.is_staff = True
+            
+            # Grant all permissions to master admin
+            self.user_permissions.set(Permission.objects.all())
+        
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.username

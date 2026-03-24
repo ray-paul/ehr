@@ -38,13 +38,16 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',  # Add whitenoise
     
     # Local apps
-    'accounts',
+    'authentication',
+    #'accounts',
     'patients',
     'reports',
     'appointments_app',
     'prescriptions',
     'labresults',
 ]
+
+AUTH_USER_MODEL = 'authentication.User'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

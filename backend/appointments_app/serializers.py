@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from .models import Appointment, AppointmentMessage, AppointmentFeedback
 from patients.serializers import PatientSerializer
-from accounts.serializers import UserSerializer
+from authentication.serializers import UserSerializer
 
 class AppointmentMessageSerializer(serializers.ModelSerializer):
     sender_name = serializers.CharField(source='sender.get_full_name', read_only=True)

@@ -31,6 +31,11 @@ class PatientViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         
+        # Superusers and staff can see everything
+        if user.is_superuser or user.is_staff:
+            return Patient.objects.all()
+        
+        # Check user_type for other roles
         if user.user_type in ['master_admin', 'admin', 'doctor']:
             return Patient.objects.all()
         elif user.user_type in ['nurse', 'pharmacist', 'radiologist', 'labscientist']:

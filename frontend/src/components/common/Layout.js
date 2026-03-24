@@ -1,23 +1,33 @@
-// frontend/src/components/common/Layout.js
-import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+// src/components/common/Layout.js
+import React, { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import Header from './Header';
+import Sidebar from '../Sidebar';
 import Footer from './Footer';
 
 const Layout = () => {
-  const location = useLocation();
-  
-  // Check if current path is the home page
-  const isHomePage = location.pathname === '/';
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className="flex-grow">
-        <Outlet />
-      </main>
-      {/* Only show footer on home page */}
-      {isHomePage && <Footer />}
+      <div className="flex relative">
+        {/* Sidebar */}
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        
+        {/* Main Content Area - with padding bottom to account for fixed footer */}
+        <main className="flex-1 md:ml-64 bg-gray-50 pb-16">
+          <div className="container mx-auto px-4 py-6">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+      {/* Footer - Fixed at bottom */}
+      <Footer />
     </div>
   );
 };

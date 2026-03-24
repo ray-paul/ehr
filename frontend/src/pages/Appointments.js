@@ -40,10 +40,33 @@ const Appointments = () => {
         data = await appointmentsService.list();
       }
       
-      setAppointments(data || []);
+      // Normalize the response data to always be an array
+      let appointmentsData = data;
+      
+      // Check if response is an array, if not, try to extract it
+      if (!Array.isArray(appointmentsData)) {
+        if (appointmentsData?.results) {
+          appointmentsData = appointmentsData.results;
+        } else if (appointmentsData?.data) {
+          appointmentsData = appointmentsData.data;
+        } else if (typeof appointmentsData === 'object' && appointmentsData !== null) {
+          // If it's an object, try to convert values to array
+          const values = Object.values(appointmentsData);
+          if (values.length > 0 && values.some(v => typeof v === 'object')) {
+            appointmentsData = values;
+          } else {
+            appointmentsData = [];
+          }
+        } else {
+          appointmentsData = [];
+        }
+      }
+      
+      setAppointments(appointmentsData);
     } catch (err) {
       console.error('Error fetching appointments:', err);
       setError(err.response?.data?.detail || 'Failed to load appointments. Please try again.');
+      setAppointments([]);
     } finally {
       setLoading(false);
     }
@@ -129,22 +152,27 @@ const Appointments = () => {
     return icons[type] || '📅';
   };
 
-  const filteredAppointments = appointments.filter(appt => {
+  // Safe filter - ensures appointments is always an array
+  const filteredAppointments = Array.isArray(appointments) ? appointments.filter(appt => {
     if (filter === 'all') return true;
     return appt.status === filter;
-  });
+  }) : [];
 
   const getTimeDisplay = (dateString) => {
     if (!dateString) return 'TBD';
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    });
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+    } catch (e) {
+      return 'Invalid date';
+    }
   };
 
   const getActionButtons = (appointment) => {
@@ -287,15 +315,16 @@ const Appointments = () => {
     );
   };
 
+  // Safe filter options with safe counts
   const filterOptions = [
-    { value: 'all', label: 'All Appointments', emoji: '📋', count: appointments.length },
-    { value: 'requested', label: 'Requested', emoji: '⏳', count: appointments.filter(a => a.status === 'requested').length },
-    { value: 'proposed', label: 'Counter Proposed', emoji: '🔄', count: appointments.filter(a => a.status === 'proposed').length },
-    { value: 'confirmed', label: 'Confirmed', emoji: '✅', count: appointments.filter(a => a.status === 'confirmed').length },
-    { value: 'cancelled', label: 'Cancelled', emoji: '❌', count: appointments.filter(a => a.status === 'cancelled').length },
-    { value: 'completed', label: 'Completed', emoji: '✓', count: appointments.filter(a => a.status === 'completed').length },
-    { value: 'no_show', label: 'No Show', emoji: '⚠️', count: appointments.filter(a => a.status === 'no_show').length },
-    { value: 'rescheduled', label: 'Rescheduled', emoji: '↻', count: appointments.filter(a => a.status === 'rescheduled').length }
+    { value: 'all', label: 'All Appointments', emoji: '📋', count: Array.isArray(appointments) ? appointments.length : 0 },
+    { value: 'requested', label: 'Requested', emoji: '⏳', count: Array.isArray(appointments) ? appointments.filter(a => a.status === 'requested').length : 0 },
+    { value: 'proposed', label: 'Counter Proposed', emoji: '🔄', count: Array.isArray(appointments) ? appointments.filter(a => a.status === 'proposed').length : 0 },
+    { value: 'confirmed', label: 'Confirmed', emoji: '✅', count: Array.isArray(appointments) ? appointments.filter(a => a.status === 'confirmed').length : 0 },
+    { value: 'cancelled', label: 'Cancelled', emoji: '❌', count: Array.isArray(appointments) ? appointments.filter(a => a.status === 'cancelled').length : 0 },
+    { value: 'completed', label: 'Completed', emoji: '✓', count: Array.isArray(appointments) ? appointments.filter(a => a.status === 'completed').length : 0 },
+    { value: 'no_show', label: 'No Show', emoji: '⚠️', count: Array.isArray(appointments) ? appointments.filter(a => a.status === 'no_show').length : 0 },
+    { value: 'rescheduled', label: 'Rescheduled', emoji: '↻', count: Array.isArray(appointments) ? appointments.filter(a => a.status === 'rescheduled').length : 0 }
   ];
 
   const currentFilter = filterOptions.find(option => option.value === filter) || filterOptions[0];
@@ -403,7 +432,7 @@ const Appointments = () => {
               </button>
             </div>
 
-            {/* Stats Card */}
+            {/* Stats Card - Safe counts */}
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <span className="text-xl mr-2">📊</span>
@@ -413,27 +442,27 @@ const Appointments = () => {
                 <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg border border-green-200">
                   <span className="text-green-700 font-medium">Confirmed</span>
                   <span className="text-green-700 font-bold">
-                    {appointments.filter(a => a.status === 'confirmed').length}
+                    {Array.isArray(appointments) ? appointments.filter(a => a.status === 'confirmed').length : 0}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg border border-blue-200">
                   <span className="text-blue-700 font-medium">Pending</span>
                   <span className="text-blue-700 font-bold">
-                    {appointments.filter(a => ['requested', 'proposed'].includes(a.status)).length}
+                    {Array.isArray(appointments) ? appointments.filter(a => ['requested', 'proposed'].includes(a.status)).length : 0}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg border border-yellow-200">
                   <span className="text-yellow-700 font-medium">Today</span>
                   <span className="text-yellow-700 font-bold">
-                    {appointments.filter(a => {
+                    {Array.isArray(appointments) ? appointments.filter(a => {
                       const today = new Date().toDateString();
                       return a.confirmed_date && new Date(a.confirmed_date).toDateString() === today;
-                    }).length}
+                    }).length : 0}
                   </span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <span className="text-gray-700 font-medium">Total</span>
-                  <span className="text-gray-700 font-bold">{appointments.length}</span>
+                  <span className="text-gray-700 font-bold">{Array.isArray(appointments) ? appointments.length : 0}</span>
                 </div>
               </div>
             </div>

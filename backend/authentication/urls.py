@@ -1,0 +1,13 @@
+# backend/authentication/urls.py
+from django.urls import path
+from knox import views as knox_views
+from . import views
+
+urlpatterns = [
+    path('login/', views.LoginView.as_view(), name='login'),
+    path('logout/', knox_views.LogoutView.as_view(), name='logout'),
+    path('logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
+    path('register/patient/', views.RegisterPatientView.as_view(), name='register_patient'),
+    path('register/staff/', views.RegisterStaffView.as_view(), name='register_staff'),
+    path('profile/', views.UserProfileView.as_view(), name='profile'),
+]

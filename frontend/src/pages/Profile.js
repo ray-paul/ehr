@@ -76,53 +76,80 @@ const Profile = () => {
 
   const getRolePermissions = (userType) => {
     const permissions = {
-      doctor: [
-        'Access all patient data',
-        'Write e-prescriptions',
-        'Create medical reports',
-        'Download lab results',
-        'Download radiology images',
-        'Schedule appointments'
-      ],
-      pharmacist: [
-        'Access e-prescriptions',
-        'Manage medication inventory',
-        'Process prescription refills',
-        'View prescription history'
-      ],
-      radiologist: [
-        'Upload radiology images',
-        'Download radiology images',
-        'Create radiology reports',
-        'View patient imaging history'
-      ],
-      labscientist: [
-        'Upload lab results',
-        'Manage lab tests',
-        'View test orders',
-        'Update test status'
-      ],
-      nurse: [
-        'View patient records',
-        'Update patient vitals',
-        'Schedule appointments',
-        'Assist with procedures'
-      ],
-      admin: [
-        'Manage user accounts',
-        'System configuration',
-        'View all data',
-        'Generate reports'
-      ],
-      patient: [
-        'View own medical records',
-        'Request appointments',
-        'Message healthcare providers',
-        'View test results'
-      ]
-    };
-    
-    return permissions[userType] || ['Basic user access'];
+    master_admin: [
+      'Full system administration',
+      'Manage all users and roles',
+      'Create and manage staff accounts',
+      'Access all patient records',
+      'Modify any medical data',
+      'System configuration and settings',
+      'Audit logs access',
+      'View all reports and analytics',
+      'Manage appointments for all patients',
+      'Access all medical reports',
+      'Write prescriptions',
+      'Upload lab results and radiology images',
+      'Emergency override permissions'
+    ],
+    admin: [
+      'User management',
+      'Access all patient records',
+      'View medical reports',
+      'Manage appointments',
+      'System settings',
+      'Staff management',
+      'Generate reports'
+    ],
+    doctor: [
+      'View assigned patients',
+      'Create and edit medical reports',
+      'Write prescriptions',
+      'Manage appointments',
+      'Access lab results',
+      'View patient history',
+      'Download patient records'
+    ],
+    pharmacist: [
+      'View prescriptions',
+      'Dispense medications',
+      'Check drug interactions',
+      'Manage pharmacy inventory',
+      'View patient medication history',
+      'Process refills'
+    ],
+    radiologist: [
+      'Upload radiology images',
+      'View patient imaging studies',
+      'Create radiology reports',
+      'Access patient imaging history',
+      'Download DICOM images'
+    ],
+    labscientist: [
+      'Upload lab results',
+      'Run lab tests',
+      'View test orders',
+      'Update test status',
+      'Manage lab equipment'
+    ],
+    nurse: [
+      'View patient records',
+      'Update patient vitals',
+      'Schedule appointments',
+      'Assist with procedures',
+      'Monitor patient status',
+      'Document care'
+    ],
+    patient: [
+      'View own medical records',
+      'View own prescriptions',
+      'Book appointments',
+      'View lab results',
+      'Update personal information',
+      'Message healthcare providers'
+    ]
+  };
+  
+  return permissions[userType] || ['Standard user access'];
   };
 
   if (loading) {
