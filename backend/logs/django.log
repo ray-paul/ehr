@@ -867,3 +867,5 @@ WARNING 2026-03-24 20:24:22,145 basehttp 3524 13316 "GET /api/notifications/unre
 WARNING 2026-03-24 20:24:22,145 basehttp 3524 14104 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
 WARNING 2026-03-24 20:24:28,696 basehttp 3524 13316 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
 WARNING 2026-03-24 20:24:28,700 basehttp 3524 14104 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+WARNING 2026-03-24 20:24:52,123 basehttp 3524 14104 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
+WARNING 2026-03-24 20:24:52,124 basehttp 3524 13316 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
