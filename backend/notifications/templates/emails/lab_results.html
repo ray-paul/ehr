@@ -1,0 +1,26 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+<div style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: rgb(62, 64, 149);">
+    Your Lab Results Are Ready
+</div>
+
+<p>Dear {{ patient_name }},</p>
+
+<p>Your {{ test_name }} results are now available.</p>
+
+<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+    <p><strong>Test:</strong> {{ test_name }}</p>
+    <p><strong>Summary:</strong> {{ result_summary }}</p>
+    {% if doctor_notes %}
+    <p><strong>Doctor's Notes:</strong> {{ doctor_notes }}</p>
+    {% endif %}
+    {% if follow_up_needed %}
+    <p><strong>⚠️ Follow-up Required:</strong> Please schedule a follow-up appointment to discuss these results.</p>
+    {% endif %}
+</div>
+
+<a href="{{ result_url }}" class="button" style="display: inline-block; padding: 12px 24px; background: rgb(62, 64, 149); color: white; text-decoration: none; border-radius: 5px; margin-top: 20px;">
+    View Full Results →
+</a>
+{% endblock %}

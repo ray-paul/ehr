@@ -1,0 +1,27 @@
+<!-- backend/notifications/templates/emails/notification.html -->
+{% extends "emails/base.html" %}
+
+{% block content %}
+<div class="priority-badge" style="display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 15px; 
+    {% if priority == 'high' %}background: #fee2e2; color: #dc2626;
+    {% elif priority == 'medium' %}background: #fed7aa; color: #ea580c;
+    {% else %}background: #e0e7ff; color: #4f46e5;{% endif %}">
+    {% if priority == 'high' %}⚠️ Urgent
+    {% elif priority == 'medium' %}📌 Important
+    {% else %}ℹ️ Information{% endif %}
+</div>
+
+<div style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: rgb(62, 64, 149);">
+    {{ notification_title }}
+</div>
+
+<div style="margin-bottom: 25px; font-size: 16px;">
+    {{ notification_message }}
+</div>
+
+{% if action_url %}
+<a href="{{ action_url }}" class="button" style="display: inline-block; padding: 12px 24px; background: rgb(62, 64, 149); color: white; text-decoration: none; border-radius: 5px; margin-top: 20px;">
+    View Details →
+</a>
+{% endif %}
+{% endblock %}
