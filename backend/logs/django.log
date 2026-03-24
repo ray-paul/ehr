@@ -909,3 +909,10 @@ WARNING 2026-03-24 20:31:29,006 basehttp 15988 18788 "GET /api/notifications/unr
 WARNING 2026-03-24 20:31:29,011 basehttp 15988 18416 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
 WARNING 2026-03-24 20:31:29,034 basehttp 15988 18788 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
 WARNING 2026-03-24 20:31:29,038 basehttp 15988 18416 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+INFO 2026-03-24 20:32:02,361 basehttp 15988 13076 "GET /api/patients/ HTTP/1.1" 200 474
+WARNING 2026-03-24 20:32:02,391 basehttp 15988 18416 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
+WARNING 2026-03-24 20:32:02,395 basehttp 15988 18788 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+WARNING 2026-03-24 20:32:23,741 basehttp 15988 18788 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
+WARNING 2026-03-24 20:32:23,747 basehttp 15988 18416 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+WARNING 2026-03-24 20:32:52,161 basehttp 15988 18788 "GET /api/messages/unread-count/ HTTP/1.1" 404 2975
+WARNING 2026-03-24 20:32:52,167 basehttp 15988 18416 "GET /api/notifications/unread-count/ HTTP/1.1" 404 2990
