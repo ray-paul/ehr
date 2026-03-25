@@ -9,9 +9,6 @@ const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const location = useLocation();
-  
-  // Check if current path is the home page
-  const isHomePage = location.pathname === '/';
 
   // Handle window resize to detect mobile view
   useEffect(() => {
@@ -35,17 +32,22 @@ const Layout = () => {
     setSidebarOpen(false);
   };
 
+  // Calculate sidebar width for offset
+  const sidebarWidth = 256; // 64 * 4 = 256px (w-64)
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header with hamburger menu on mobile */}
-      <Header 
-        toggleSidebar={toggleSidebar} 
-        isMobile={isMobile}
-        sidebarOpen={sidebarOpen}
-        closeSidebar={closeSidebar}
-      />
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Header - Fixed at top, spans full width */}
+      <div className="fixed top-0 left-0 right-0 z-40">
+        <Header 
+          toggleSidebar={toggleSidebar} 
+          isMobile={isMobile}
+          sidebarOpen={sidebarOpen}
+          closeSidebar={closeSidebar}
+        />
+      </div>
       
-      {/* Sidebar - Different behavior on desktop vs mobile */}
+      {/* Sidebar - Fixed on left */}
       {!isMobile ? (
         // Desktop: Fixed sidebar always visible
         <Sidebar isOpen={true} onClose={() => {}} />
@@ -66,15 +68,17 @@ const Layout = () => {
         </>
       )}
       
-      {/* Main Content Area */}
-      <main className={`min-h-screen ${!isMobile ? 'md:ml-64' : ''}`}>
-        <div className="container mx-auto px-4 py-6">
-          <Outlet />
-        </div>
-      </main>
-      
-      {/* Footer - Only show on home page */}
-      {isHomePage && <Footer />}
+      {/* Main Content Area - Offset by header height and sidebar width on desktop */}
+      <div className={`flex-1 ${!isMobile ? 'ml-64' : ''} mt-14 sm:mt-16`}>
+        <main className="min-h-[calc(100vh-7rem)]">
+          <div className="container mx-auto px-4 py-6">
+            <Outlet />
+          </div>
+        </main>
+        
+        {/* Footer - Full width, below content */}
+        <Footer />
+      </div>
     </div>
   );
 };
