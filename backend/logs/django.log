@@ -2766,3 +2766,66 @@ INFO 2026-04-13 14:00:47,384 basehttp 21788 24288 "GET /api/notifications/notifi
 INFO 2026-04-13 14:00:47,423 basehttp 21788 24288 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
 INFO 2026-04-13 14:00:48,362 autoreload 21788 27324 C:\Users\Paul\hacksmith\ehr\backend\patients\views.py changed, reloading.
 INFO 2026-04-13 14:00:50,487 autoreload 8804 15480 Watching for file changes with StatReloader
+INFO 2026-04-13 14:01:16,064 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:01:16,083 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:01:45,659 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:01:45,677 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:01:47,015 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:01:47,030 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:02:15,654 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:02:15,669 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:02:45,650 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:02:45,695 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:02:47,033 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:02:47,062 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:03:15,644 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:03:15,657 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:03:45,652 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:03:45,672 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:03:47,084 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:03:47,113 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:04:15,654 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:04:15,675 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:04:45,644 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:04:45,658 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:04:47,039 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:04:47,107 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:04:47,564 basehttp 8804 8748 "GET /api/patients/ HTTP/1.1" 200 474
+WARNING 2026-04-13 14:05:14,597 basehttp 8804 8748 "PUT /api/patients/patients/1/ HTTP/1.1" 400 36
+INFO 2026-04-13 14:05:15,647 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:05:15,667 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:05:45,643 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:05:45,666 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:05:47,036 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:05:47,095 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:05:52,438 basehttp 8804 8748 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-04-13 14:06:08,020 basehttp 8804 8748 "GET /api/patients/ HTTP/1.1" 200 474
+INFO 2026-04-13 14:06:15,652 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:06:15,674 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+WARNING 2026-04-13 14:06:34,091 basehttp 8804 8748 "PUT /api/patients/patients/1/ HTTP/1.1" 400 36
+WARNING 2026-04-13 14:06:36,718 basehttp 8804 8748 "PUT /api/patients/patients/1/ HTTP/1.1" 400 36
+INFO 2026-04-13 14:06:45,652 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:06:45,674 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:06:47,015 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:06:47,031 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:07:15,643 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:07:15,664 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:07:45,640 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:07:45,658 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:07:47,035 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:07:47,063 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:08:15,794 basehttp 8804 8748 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:08:15,839 basehttp 8804 8748 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:08:17,789 autoreload 8804 15480 C:\Users\Paul\hacksmith\ehr\backend\patients\serializers.py changed, reloading.
+INFO 2026-04-13 14:08:24,062 autoreload 10152 22264 Watching for file changes with StatReloader
+INFO 2026-04-13 14:08:46,071 basehttp 10152 7240 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:08:46,093 basehttp 10152 7240 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:08:47,012 basehttp 10152 7240 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:08:47,024 basehttp 10152 7240 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:09:15,641 basehttp 10152 7240 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:09:15,656 basehttp 10152 7240 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:09:45,665 basehttp 10152 7240 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:09:45,709 basehttp 10152 7240 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:09:47,048 basehttp 10152 7240 "GET /api/notifications/notifications/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:09:47,071 basehttp 10152 7240 "GET /api/chat/conversations/unread_count/ HTTP/1.1" 200 11
+INFO 2026-04-13 14:09:55,070 autoreload 10152 22264 C:\Users\Paul\hacksmith\ehr\backend\patients\views.py changed, reloading.

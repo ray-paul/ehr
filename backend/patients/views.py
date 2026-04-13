@@ -13,30 +13,27 @@ from .serializers import (
     InsuranceSerializer, PrimaryCarePhysicianSerializer
 )
 
+
 class IsProviderOrAdmin(permissions.BasePermission):
-    """Custom permission to allow providers and admins to edit"""
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return request.user.is_authenticated
         return request.user.is_authenticated and request.user.user_type in ['doctor', 'admin', 'master_admin']
+
 
 class PatientViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['user__first_name', 'user__last_name', 'user__email', 'phone']
     ordering_fields = ['user__first_name', 'user__last_name', 'created_at']
-    ordering = ['-id']  # Add ordering to fix pagination warning
-    
-    queryset = Patient.objects.all()
+    ordering = ['-id']
     
     def get_queryset(self):
         user = self.request.user
         
-        # Superusers and staff can see everything
         if user.is_superuser or user.is_staff:
             return Patient.objects.all().order_by('-id')
         
-        # Check user_type for other roles
         if user.user_type in ['master_admin', 'admin', 'doctor']:
             return Patient.objects.all().order_by('-id')
         elif user.user_type in ['nurse', 'pharmacist', 'radiologist', 'labscientist']:
