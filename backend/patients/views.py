@@ -25,6 +25,7 @@ class PatientViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['user__first_name', 'user__last_name', 'user__email', 'phone']
     ordering_fields = ['user__first_name', 'user__last_name', 'created_at']
+    ordering = ['-id']  # Add ordering to fix pagination warning
     
     queryset = Patient.objects.all()
     
@@ -33,14 +34,14 @@ class PatientViewSet(viewsets.ModelViewSet):
         
         # Superusers and staff can see everything
         if user.is_superuser or user.is_staff:
-            return Patient.objects.all()
+            return Patient.objects.all().order_by('-id')
         
         # Check user_type for other roles
         if user.user_type in ['master_admin', 'admin', 'doctor']:
-            return Patient.objects.all()
+            return Patient.objects.all().order_by('-id')
         elif user.user_type in ['nurse', 'pharmacist', 'radiologist', 'labscientist']:
-            return Patient.objects.all()
-        elif hasattr(user, 'patient'):
+            return Patient.objects.all().order_by('-id')
+        elif hasattr(user, 'patient_profile'):
             return Patient.objects.filter(user=user)
         
         return Patient.objects.none()
@@ -101,7 +102,7 @@ class PatientViewSet(viewsets.ModelViewSet):
 class ClinicalNoteViewSet(viewsets.ModelViewSet):
     serializer_class = ClinicalNoteSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = ClinicalNote.objects.all()
+    queryset = ClinicalNote.objects.all().order_by('-created_at')
     
     def get_queryset(self):
         user = self.request.user
@@ -109,10 +110,10 @@ class ClinicalNoteViewSet(viewsets.ModelViewSet):
         
         if user.user_type in ['master_admin', 'admin', 'doctor']:
             if patient_id:
-                return ClinicalNote.objects.filter(patient_id=patient_id)
-            return ClinicalNote.objects.all()
-        elif hasattr(user, 'patient'):
-            return ClinicalNote.objects.filter(patient=user.patient)
+                return ClinicalNote.objects.filter(patient_id=patient_id).order_by('-created_at')
+            return ClinicalNote.objects.all().order_by('-created_at')
+        elif hasattr(user, 'patient_profile'):
+            return ClinicalNote.objects.filter(patient=user.patient_profile).order_by('-created_at')
         
         return ClinicalNote.objects.none()
     
@@ -123,7 +124,7 @@ class ClinicalNoteViewSet(viewsets.ModelViewSet):
 class AllergyViewSet(viewsets.ModelViewSet):
     serializer_class = AllergySerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Allergy.objects.all()
+    queryset = Allergy.objects.all().order_by('allergen')
     
     def get_queryset(self):
         user = self.request.user
@@ -131,10 +132,10 @@ class AllergyViewSet(viewsets.ModelViewSet):
         
         if user.user_type in ['master_admin', 'admin', 'doctor']:
             if patient_id:
-                return Allergy.objects.filter(patient_id=patient_id)
-            return Allergy.objects.all()
-        elif hasattr(user, 'patient'):
-            return Allergy.objects.filter(patient=user.patient)
+                return Allergy.objects.filter(patient_id=patient_id).order_by('allergen')
+            return Allergy.objects.all().order_by('allergen')
+        elif hasattr(user, 'patient_profile'):
+            return Allergy.objects.filter(patient=user.patient_profile).order_by('allergen')
         
         return Allergy.objects.none()
 
@@ -142,7 +143,7 @@ class AllergyViewSet(viewsets.ModelViewSet):
 class ChronicConditionViewSet(viewsets.ModelViewSet):
     serializer_class = ChronicConditionSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = ChronicCondition.objects.all()
+    queryset = ChronicCondition.objects.all().order_by('condition')
     
     def get_queryset(self):
         user = self.request.user
@@ -150,10 +151,10 @@ class ChronicConditionViewSet(viewsets.ModelViewSet):
         
         if user.user_type in ['master_admin', 'admin', 'doctor']:
             if patient_id:
-                return ChronicCondition.objects.filter(patient_id=patient_id)
-            return ChronicCondition.objects.all()
-        elif hasattr(user, 'patient'):
-            return ChronicCondition.objects.filter(patient=user.patient)
+                return ChronicCondition.objects.filter(patient_id=patient_id).order_by('condition')
+            return ChronicCondition.objects.all().order_by('condition')
+        elif hasattr(user, 'patient_profile'):
+            return ChronicCondition.objects.filter(patient=user.patient_profile).order_by('condition')
         
         return ChronicCondition.objects.none()
 
@@ -161,7 +162,7 @@ class ChronicConditionViewSet(viewsets.ModelViewSet):
 class MedicationViewSet(viewsets.ModelViewSet):
     serializer_class = MedicationSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Medication.objects.all()
+    queryset = Medication.objects.all().order_by('-prescribed_date')
     
     def get_queryset(self):
         user = self.request.user
@@ -169,12 +170,12 @@ class MedicationViewSet(viewsets.ModelViewSet):
         
         if user.user_type in ['master_admin', 'admin', 'doctor']:
             if patient_id:
-                return Medication.objects.filter(patient_id=patient_id)
-            return Medication.objects.all()
+                return Medication.objects.filter(patient_id=patient_id).order_by('-prescribed_date')
+            return Medication.objects.all().order_by('-prescribed_date')
         elif user.user_type == 'pharmacist':
-            return Medication.objects.all()
-        elif hasattr(user, 'patient'):
-            return Medication.objects.filter(patient=user.patient)
+            return Medication.objects.all().order_by('-prescribed_date')
+        elif hasattr(user, 'patient_profile'):
+            return Medication.objects.filter(patient=user.patient_profile).order_by('-prescribed_date')
         
         return Medication.objects.none()
     
@@ -202,8 +203,8 @@ class InsuranceViewSet(viewsets.ModelViewSet):
         
         if user.user_type in ['master_admin', 'admin', 'doctor']:
             return Insurance.objects.all()
-        elif hasattr(user, 'patient'):
-            return Insurance.objects.filter(patient=user.patient)
+        elif hasattr(user, 'patient_profile'):
+            return Insurance.objects.filter(patient=user.patient_profile)
         
         return Insurance.objects.none()
 
@@ -218,7 +219,7 @@ class PrimaryCarePhysicianViewSet(viewsets.ModelViewSet):
         
         if user.user_type in ['master_admin', 'admin', 'doctor']:
             return PrimaryCarePhysician.objects.all()
-        elif hasattr(user, 'patient'):
-            return PrimaryCarePhysician.objects.filter(patient=user.patient)
+        elif hasattr(user, 'patient_profile'):
+            return PrimaryCarePhysician.objects.filter(patient=user.patient_profile)
         
         return PrimaryCarePhysician.objects.none()
